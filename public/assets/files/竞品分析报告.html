@@ -1,0 +1,3578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI情感陪伴竞品分析报告 · 猫箱 vs 星野</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root {
+    --rose-deep: #9B3A4A;
+    --rose-mid: #C4667A;
+    --rose-soft: #E8A8B5;
+    --rose-pale: #F5D5DC;
+    --rose-blush: #FDF0F3;
+    --rose-light: #FFF8FA;
+    --gold: #B8926A;
+    --gold-light: #E8D5C0;
+    --navy: #1D3461;
+    --navy-mid: #3A5FA0;
+    --navy-soft: #8BAED4;
+    --navy-pale: #D5E4F2;
+    --dark: #3D1F28;
+    --text: #4A2D35;
+    --text-light: #7A5560;
+    --border: #EEC8D0;
+    --white: #FFFFFF;
+    --shadow: 0 4px 24px rgba(155, 58, 74, 0.10);
+    --shadow-lg: 0 12px 48px rgba(155, 58, 74, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--rose-light);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* === DECORATIVE BACKGROUND === */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 90% 10%, rgba(232,168,181,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 5% 85%, rgba(232,168,181,0.14) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 50% 50%, rgba(255,240,245,0.6) 0%, transparent 80%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Floating petal decorations */
+  .petal {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.07;
+  }
+  .petal svg { fill: var(--rose-mid); }
+
+  /* === NAVIGATION === */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(253, 240, 243, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-brand {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--rose-deep);
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-brand .dot {
+    width: 7px; height: 7px;
+    background: var(--rose-mid);
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+    color: var(--text-light);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+    letter-spacing: 0.03em;
+  }
+
+  .nav-links a:hover { color: var(--rose-deep); }
+
+  /* === MAIN CONTENT === */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 100px 40px 80px;
+  }
+
+  /* === HERO SECTION === */
+  .hero {
+    text-align: center;
+    padding: 80px 0 100px;
+    position: relative;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    background: var(--rose-pale);
+    color: var(--rose-deep);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 20px;
+    margin-bottom: 32px;
+    border: 1px solid var(--border);
+  }
+
+  .hero-question {
+    font-family: 'Noto Serif SC', serif;
+    font-size: clamp(48px, 8vw, 88px);
+    font-weight: 900;
+    color: var(--rose-deep);
+    line-height: 1.1;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--rose-deep) 0%, #C4667A 50%, #D4956A 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-question-mark {
+    color: var(--gold);
+    -webkit-text-fill-color: var(--gold);
+  }
+
+  .hero-subtitle {
+    font-size: 18px;
+    color: var(--text-light);
+    max-width: 600px;
+    margin: 24px auto 48px;
+    font-weight: 300;
+    line-height: 1.8;
+  }
+
+  .hero-definition {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px 48px;
+    max-width: 780px;
+    margin: 0 auto 64px;
+    box-shadow: var(--shadow);
+    text-align: left;
+  }
+
+  .definition-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .definition-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gold-light);
+  }
+
+  .definition-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--rose-deep);
+    margin-bottom: 16px;
+  }
+
+  .definition-text {
+    font-size: 15px;
+    color: var(--text-light);
+    line-height: 1.9;
+  }
+
+  .definition-text strong {
+    color: var(--rose-deep);
+    font-weight: 600;
+  }
+
+  .definition-terms {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 28px;
+  }
+
+  .term-card {
+    background: var(--rose-blush);
+    border-radius: 12px;
+    padding: 16px 20px;
+    border-left: 3px solid var(--rose-mid);
+  }
+
+  .term-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--rose-deep);
+    margin-bottom: 4px;
+    letter-spacing: 0.03em;
+  }
+
+  .term-desc {
+    font-size: 13px;
+    color: var(--text-light);
+    line-height: 1.6;
+  }
+
+  /* === CHAPTER DIVIDERS === */
+  .chapter-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 80px 0 40px;
+  }
+
+  .chapter-num {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 72px;
+    font-weight: 900;
+    color: var(--rose-pale);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    min-width: 80px;
+  }
+
+  .chapter-info .chapter-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--rose-mid);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .chapter-info .chapter-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--rose-deep);
+    line-height: 1.2;
+  }
+
+  .chapter-info .chapter-sub {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-top: 4px;
+  }
+
+  /* === CARDS === */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px;
+    box-shadow: var(--shadow);
+  }
+
+  .card-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--rose-deep);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-title .icon {
+    width: 32px; height: 32px;
+    background: var(--rose-pale);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  /* === INDUSTRY DATA === */
+  .industry-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .stat-block {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: var(--shadow);
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .stat-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .stat-icon.rose { background: var(--rose-pale); }
+  .stat-icon.navy { background: var(--navy-pale); }
+  .stat-icon.gold { background: var(--gold-light); }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-bottom: 4px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+
+  .stat-value {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--rose-deep);
+    line-height: 1.1;
+  }
+
+  .stat-note {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 4px;
+  }
+
+  /* === PRODUCT COMPARE HERO === */
+  .product-versus {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 24px;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+
+  .product-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    border: 2px solid transparent;
+  }
+
+  .product-card.winner {
+    border-color: var(--rose-mid);
+    box-shadow: var(--shadow-lg), 0 0 0 2px var(--rose-pale);
+  }
+
+  .product-card.blue {
+    border-color: var(--navy-soft);
+    box-shadow: 0 4px 24px rgba(29, 52, 97, 0.10);
+  }
+
+  .product-avatar {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+  }
+
+  .product-avatar.pink { background: linear-gradient(135deg, var(--rose-pale), var(--rose-soft)); }
+  .product-avatar.navy-bg { background: linear-gradient(135deg, var(--navy-pale), var(--navy-soft)); }
+
+  .product-name {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .product-name.rose-text { color: var(--rose-deep); }
+  .product-name.navy-text { color: var(--navy); }
+
+  .product-score {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 52px;
+    font-weight: 900;
+    line-height: 1;
+    margin: 12px 0;
+  }
+
+  .product-score.rose-text { color: var(--rose-mid); }
+  .product-score.navy-text { color: var(--navy-mid); }
+
+  .score-label {
+    font-size: 12px;
+    color: var(--text-light);
+    letter-spacing: 0.05em;
+  }
+
+  .stars {
+    margin: 8px 0;
+    font-size: 20px;
+  }
+
+  .vs-badge {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--rose-soft);
+    text-align: center;
+  }
+
+  /* === SCORE BARS === */
+  .score-row {
+    margin-bottom: 20px;
+  }
+
+  .score-row-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .score-row-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .score-row-values {
+    font-size: 13px;
+    color: var(--text-light);
+  }
+
+  .bar-track {
+    height: 10px;
+    background: var(--rose-blush);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .bar-fill.rose { background: linear-gradient(90deg, var(--rose-mid), var(--rose-soft)); }
+  .bar-fill.navy { background: linear-gradient(90deg, var(--navy-mid), var(--navy-soft)); }
+
+  .dual-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  /* === DIMENSION CARDS === */
+  .dimension-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .dim-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 20px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dim-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .dim-card.rose::before { background: linear-gradient(90deg, var(--rose-mid), var(--rose-soft)); }
+  .dim-card.navy::before { background: linear-gradient(90deg, var(--navy-mid), var(--navy-soft)); }
+  .dim-card.gold::before { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+  .dim-card.purple::before { background: linear-gradient(90deg, #8B5A8C, #C4A0C5); }
+
+  .dim-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .dim-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--rose-deep);
+    margin-bottom: 12px;
+  }
+
+  .dim-scores {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .dim-score-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .dim-score-name {
+    font-size: 12px;
+    color: var(--text-light);
+    width: 28px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .dim-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--rose-blush);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .dim-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+  }
+
+  .dim-bar-fill.rose { background: var(--rose-mid); }
+  .dim-bar-fill.navy { background: var(--navy-mid); }
+
+  .dim-score-val {
+    font-size: 12px;
+    font-weight: 600;
+    width: 28px;
+    flex-shrink: 0;
+  }
+
+  .dim-score-val.rose { color: var(--rose-mid); }
+  .dim-score-val.navy { color: var(--navy-mid); }
+
+  /* === METHODOLOGY === */
+  .method-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    position: relative;
+  }
+
+  .method-steps::before {
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: 10%;
+    width: 80%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--rose-pale), var(--rose-soft), var(--rose-pale));
+    z-index: 0;
+  }
+
+  .method-step {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 20px 24px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .step-num {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--rose-mid), var(--rose-soft));
+    color: var(--white);
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-family: 'Noto Serif SC', serif;
+  }
+
+  .step-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--rose-deep);
+    margin-bottom: 10px;
+  }
+
+  .step-items {
+    list-style: none;
+    text-align: left;
+  }
+
+  .step-items li {
+    font-size: 12px;
+    color: var(--text-light);
+    padding: 3px 0;
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .step-items li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--rose-mid);
+    font-size: 11px;
+  }
+
+  /* === DIMENSION DETAIL TABLE === */
+  .eval-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  .eval-table th {
+    background: var(--rose-blush);
+    color: var(--rose-deep);
+    font-weight: 700;
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .eval-table th:first-child { border-radius: 8px 0 0 0; }
+  .eval-table th:last-child { border-radius: 0 8px 0 0; }
+
+  .eval-table td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--rose-blush);
+    vertical-align: middle;
+  }
+
+  .eval-table tr:hover td { background: var(--rose-blush); }
+
+  .eval-table tr:last-child td { border-bottom: none; }
+
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 10px;
+    letter-spacing: 0.03em;
+  }
+
+  .tag.rose { background: var(--rose-pale); color: var(--rose-deep); }
+  .tag.navy { background: var(--navy-pale); color: var(--navy); }
+  .tag.gold { background: var(--gold-light); color: #7A5020; }
+
+  .score-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mini-bar {
+    width: 60px;
+    height: 6px;
+    background: var(--rose-blush);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .mini-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+  }
+
+  .mini-bar-fill.rose { background: var(--rose-mid); }
+  .mini-bar-fill.navy { background: var(--navy-mid); }
+
+  .winner-badge {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--white);
+    background: var(--rose-mid);
+    padding: 2px 6px;
+    border-radius: 6px;
+    letter-spacing: 0.03em;
+  }
+
+  .winner-badge.blue { background: var(--navy-mid); }
+
+  /* === CHARTS === */
+  .chart-container {
+    position: relative;
+    width: 100%;
+  }
+
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 40px;
+  }
+
+  /* === SAFETY SECTION === */
+  .safety-vs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .safety-card {
+    border-radius: 16px;
+    padding: 28px;
+  }
+
+  .safety-card.green {
+    background: linear-gradient(135deg, #E8F5E9, #F1F8F2);
+    border: 1px solid #A5D6A7;
+  }
+
+  .safety-card.red {
+    background: linear-gradient(135deg, var(--rose-blush), #FFF0F0);
+    border: 1px solid var(--rose-pale);
+  }
+
+  .safety-score {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 1;
+    margin: 8px 0;
+  }
+
+  .safety-score.green { color: #2E7D32; }
+  .safety-score.red { color: var(--rose-deep); }
+
+  .safety-items {
+    list-style: none;
+    margin-top: 16px;
+  }
+
+  .safety-items li {
+    font-size: 13px;
+    color: var(--text-light);
+    padding: 5px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.5;
+  }
+
+  .safety-items li .check { color: #4CAF50; font-size: 14px; }
+  .safety-items li .cross { color: var(--rose-mid); font-size: 14px; }
+
+  /* === INSIGHT CARDS === */
+  .insight-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .insight-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: var(--shadow);
+  }
+
+  .insight-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .insight-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+
+  .insight-icon.rose { background: var(--rose-pale); }
+  .insight-icon.navy { background: var(--navy-pale); }
+  .insight-icon.amber { background: #FFF3E0; }
+  .insight-icon.green { background: #E8F5E9; }
+
+  .insight-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--rose-deep);
+  }
+
+  .insight-subtitle {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 2px;
+  }
+
+  .insight-list {
+    list-style: none;
+  }
+
+  .insight-list li {
+    font-size: 13px;
+    color: var(--text-light);
+    padding: 5px 0;
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .insight-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--rose-soft);
+    font-size: 12px;
+    top: 6px;
+  }
+
+  .insight-badge {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+  }
+
+  .insight-badge.rose { background: var(--rose-pale); color: var(--rose-deep); }
+  .insight-badge.navy { background: var(--navy-pale); color: var(--navy); }
+  .insight-badge.amber { background: #FFF3E0; color: #B45309; }
+  .insight-badge.green { background: #E8F5E9; color: #2E7D32; }
+
+  /* === CONCLUSION === */
+  .conclusion-box {
+    background: linear-gradient(135deg, var(--rose-deep) 0%, #C4667A 60%, #D4956A 100%);
+    border-radius: 24px;
+    padding: 48px;
+    text-align: center;
+    color: var(--white);
+    margin-top: 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .conclusion-box::before {
+    content: '❝';
+    position: absolute;
+    top: 20px;
+    left: 40px;
+    font-size: 80px;
+    opacity: 0.15;
+    font-family: serif;
+    line-height: 1;
+  }
+
+  .conclusion-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    opacity: 0.9;
+    letter-spacing: 0.03em;
+  }
+
+  .conclusion-text {
+    font-size: 16px;
+    line-height: 1.9;
+    opacity: 0.85;
+    max-width: 700px;
+    margin: 0 auto 32px;
+  }
+
+  .conclusion-pills {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    background: rgba(255,255,255,0.2);
+    color: var(--white);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 8px 20px;
+    border-radius: 24px;
+    font-size: 13px;
+    font-weight: 600;
+    backdrop-filter: blur(8px);
+  }
+
+  /* === SECTION DIVIDER === */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 60px 0 40px;
+    color: var(--rose-soft);
+    font-size: 18px;
+  }
+
+  .section-divider::before,
+  .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+
+  /* === KEY METRICS ROW === */
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .metric-mini {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 16px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+
+  .metric-mini .num {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--rose-deep);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .metric-mini .unit {
+    font-size: 12px;
+    color: var(--rose-mid);
+    font-weight: 600;
+  }
+
+  .metric-mini .label {
+    font-size: 11px;
+    color: var(--text-light);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+
+  /* === TEAM SECTION === */
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .team-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+
+  .team-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .team-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .team-name {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--rose-deep);
+  }
+
+  .team-count {
+    font-size: 12px;
+    color: var(--text-light);
+  }
+
+  .team-tasks {
+    list-style: none;
+  }
+
+  .team-tasks li {
+    font-size: 13px;
+    color: var(--text-light);
+    padding: 4px 0;
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .team-tasks li::before {
+    content: '◆';
+    position: absolute;
+    left: 0;
+    color: var(--rose-pale);
+    font-size: 8px;
+    top: 8px;
+  }
+
+  /* === FOOTER === */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 40px;
+    color: var(--text-light);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+
+  footer strong { color: var(--rose-mid); }
+
+  /* === ANIMATIONS === */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .fade-in {
+    animation: fadeInUp 0.7s ease forwards;
+  }
+
+  .hero { animation: fadeInUp 0.9s ease forwards; }
+
+  /* === RESPONSIVE NOTES === */
+  .note-box {
+    background: var(--rose-blush);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--rose-mid);
+    border-radius: 0 12px 12px 0;
+    padding: 14px 20px;
+    font-size: 13px;
+    color: var(--text-light);
+    margin-top: 16px;
+  }
+
+  .note-box strong { color: var(--rose-deep); }
+
+  /* === DIFF BADGE === */
+  .diff-positive {
+    color: #4CAF50;
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .diff-negative {
+    color: var(--rose-mid);
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .diff-zero {
+    color: var(--text-light);
+    font-size: 13px;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--rose-blush); }
+  ::-webkit-scrollbar-thumb { background: var(--rose-soft); border-radius: 3px; }
+
+  /* ─── DATA TOOLTIP ─── */
+  .dt { position:relative; cursor:pointer; }
+  .dt::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a1a2e;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.55;
+    padding: 8px 12px;
+    border-radius: 10px;
+    white-space: pre-line;
+    width: max-content;
+    max-width: 220px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.18s ease;
+    z-index: 9999;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.22);
+  }
+  .dt::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 2px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #1a1a2e;
+    opacity: 0;
+    transition: opacity 0.18s ease;
+    z-index: 9999;
+  }
+  .dt:hover::after, .dt:hover::before { opacity: 1; }
+
+  /* ─── SUBDIM hover highlight ─── */
+  .subdim-row .sr-name { transition: color 0.15s; }
+  .subdim-row:hover .sr-name { color: var(--rose-deep); }
+
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+  <div class="nav-brand">
+    <span class="dot"></span>
+    AI情感陪伴 · 竞品分析报告
+  </div>
+  <ul class="nav-links">
+    <li><a href="#intro">引言</a></li>
+    <li><a href="#background">背景</a></li>
+    <li><a href="#methodology">方法论</a></li>
+    <li><a href="#overview">综合对比</a></li>
+    <li><a href="#dimensions">四维评分</a></li>
+    <li><a href="#model">模型质量</a></li>
+    <li><a href="#safety">安全合规</a></li>
+    <li><a href="#insights">核心洞察</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- ===== HERO / INTRO ===== -->
+  <section id="intro" class="hero">
+    <div class="hero-tag">AI Emotional Companion · Competitive Analysis Report · 2026</div>
+    <div class="hero-question">AI有情感吗？</div>
+    <p class="hero-subtitle">
+      这是一个哲学问题，也是一道产品命题。<br>
+      在我们开始评测之前，先来认真回答它。
+    </p>
+
+    <div class="hero-definition">
+      <div class="definition-label">专业术语解释 · Technical Definition</div>
+      <div class="definition-title">从"情感模拟"到"情感陪伴"——AI的情感能力边界</div>
+      <p class="definition-text">
+        当前大语言模型（<strong>LLM</strong>）并不具备真正的"情感"，但可通过学习海量对话，识别并回应人类情绪信号——即<strong>情感对齐（Affective Alignment）</strong>，让用户产生"被理解"的真实感受。<br><br>
+        本报告关注的核心问题：<strong>哪款产品能让用户感受到更真实的情感陪伴价值？</strong>
+      </p>
+      <div class="definition-terms">
+        <div class="term-card">
+          <div class="term-name">情感对齐 Affective Alignment</div>
+          <div class="term-desc">模型通过训练数据学习识别并适当回应用户情绪状态的能力，是情感陪伴类产品的核心底层能力</div>
+        </div>
+        <div class="term-card">
+          <div class="term-name">拟真陪伴 Simulated Companionship</div>
+          <div class="term-desc">通过角色设定、人格一致性和对话记忆，创造具有连贯性的虚拟陪伴体验</div>
+        </div>
+        <div class="term-card">
+          <div class="term-name">情绪安全边界 Emotional Safety Boundary</div>
+          <div class="term-desc">产品对高风险情绪话题（如危机干预）的处理规范，是合规陪伴的底线标准</div>
+        </div>
+        <div class="term-card">
+          <div class="term-name">情境策略调整 Contextual Adaptation</div>
+          <div class="term-desc">AI根据对话进展实时调整回复策略（如从安慰切换到轻松模式）的动态响应能力</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key metrics -->
+    <div class="metrics-row">
+      <div class="metric-mini">
+        <div class="num">2</div>
+        <div class="unit">款</div>
+        <div class="label">竞品深度调研<br>猫箱 & 星野</div>
+      </div>
+      <div class="metric-mini">
+        <div class="num">12</div>
+        <div class="unit">维</div>
+        <div class="label">评测指标体系<br>4综合 + 8模型</div>
+      </div>
+      <div class="metric-mini">
+        <div class="num">10</div>
+        <div class="unit">人</div>
+        <div class="label">团队协作评测<br>执行+质检+数据</div>
+      </div>
+      <div class="metric-mini">
+        <div class="num">80</div>
+        <div class="unit">组</div>
+        <div class="label">优质问答样本<br>多场景覆盖</div>
+      </div>
+      <div class="metric-mini">
+        <div class="num">500<span style="font-size:18px">+</span></div>
+        <div class="unit">条</div>
+        <div class="label">最终训练数据<br>高质量输出</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== IN-PAGE NAV GUIDE ===== -->
+  <div style="
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 28px 36px;
+    box-shadow: var(--shadow);
+    margin-bottom: 60px;
+  ">
+    <div style="
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    ">
+      📑 报告目录 · Table of Contents
+      <span style="flex:1; height:1px; background:var(--gold-light); display:inline-block;"></span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+      <a href="#intro" style="text-decoration:none;">
+        <div style="background:var(--rose-blush); border:1px solid var(--border); border-radius:12px; padding:14px 16px; display:flex; align-items:center; gap:10px; transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 16px rgba(155,58,74,0.15)'" onmouseout="this.style.boxShadow='none'">
+          <span style="font-size:20px;">💬</span>
+          <div>
+            <div style="font-size:11px; color:var(--rose-mid); font-weight:700; letter-spacing:0.05em;">01</div>
+            <div style="font-size:13px; font-weight:700; color:var(--rose-deep);">引言</div>
+          </div>
+        </div>
+      </a>
+      <a href="#background" style="text-decoration:none;">
+        <div style="background:var(--rose-blush); border:1px solid var(--border); border-radius:12px; padding:14px 16px; display:flex; align-items:center; gap:10px;" onmouseover="this.style.boxShadow='0 4px 16px rgba(155,58,74,0.15)'" onmouseout="this.style.boxShadow='none'">
+          <span style="font-size:20px;">📈</span>
+          <div>
+            <div style="font-size:11px; color:var(--rose-mid); font-weight:700; letter-spacing:0.05em;">02</div>
+            <div style="font-size:13px; font-weight:700; color:var(--rose-deep);">背景</div>
+          </div>
+        </div>
+      </a>
+      <a href="#methodology" style="text-decoration:none;">
+        <div style="background:var(--rose-blush); border:1px solid var(--border); border-radius:12px; padding:14px 16px; display:flex; align-items:center; gap:10px;" onmouseover="this.style.boxShadow='0 4px 16px rgba(155,58,74,0.15)'" onmouseout="this.style.boxShadow='none'">
+          <span style="font-size:20px;">🔬</span>
+          <div>
+            <div style="font-size:11px; color:var(--rose-mid); font-weight:700; letter-spacing:0.05em;">03</div>
+            <div style="font-size:13px; font-weight:700; color:var(--rose-deep);">方法论</div>
+          </div>
+        </div>
+      </a>
+      <a href="#overview" style="text-decoration:none;">
+        <div style="background:var(--rose-blush); border:1px solid var(--border); border-radius:12px; padding:14px 16px; display:flex; align-items:center; gap:10px;" onmouseover="this.style.boxShadow='0 4px 16px rgba(155,58,74,0.15)'" onmouseout="this.style.boxShadow='none'">
+          <span style="font-size:20px;">⚖️</span>
+          <div>
+            <div style="font-size:11px; color:var(--rose-mid); font-weight:700; letter-spacing:0.05em;">04</div>
+            <div style="font-size:13px; font-weight:700; color:var(--rose-deep);">综合对比</div>
+          </div>
+        </div>
+      </a>
+      <a href="#dimensions" style="text-decoration:none;">
+        <div style="background:var(--navy-pale); border:1px solid var(--navy-soft); border-radius:12px; padding:14px 16px; display:flex; align-items:center; gap:10px;" onmouseover="this.style.boxShadow='0 4px 16px rgba(29,52,97,0.15)'" onmouseout="this.style.boxShadow='none'">
+          <span style="font-size:20px;">📊</span>
+          <div>
+            <div style="font-size:11px; color:var(--navy-mid); font-weight:700; letter-spacing:0.05em;">05</div>
+            <div style="font-size:13px; font-weight:700; color:var(--navy);">四维评分</div>
+          </div>
+        </div>
+      </a>
+      <a href="#model" style="text-decoration:none;">
+        <div style="background:var(--navy-pale); border:1px solid var(--navy-soft); border-radius:12px; padding:14px 16px; display:flex; align-items:center; gap:10px;" onmouseover="this.style.boxShadow='0 4px 16px rgba(29,52,97,0.15)'" onmouseout="this.style.boxShadow='none'">
+          <span style="font-size:20px;">🧠</span>
+          <div>
+            <div style="font-size:11px; color:var(--navy-mid); font-weight:700; letter-spacing:0.05em;">06</div>
+            <div style="font-size:13px; font-weight:700; color:var(--navy);">模型质量</div>
+          </div>
+        </div>
+      </a>
+      <a href="#safety" style="text-decoration:none;">
+        <div style="background:var(--navy-pale); border:1px solid var(--navy-soft); border-radius:12px; padding:14px 16px; display:flex; align-items:center; gap:10px;" onmouseover="this.style.boxShadow='0 4px 16px rgba(29,52,97,0.15)'" onmouseout="this.style.boxShadow='none'">
+          <span style="font-size:20px;">🛡️</span>
+          <div>
+            <div style="font-size:11px; color:var(--navy-mid); font-weight:700; letter-spacing:0.05em;">07</div>
+            <div style="font-size:13px; font-weight:700; color:var(--navy);">安全合规</div>
+          </div>
+        </div>
+      </a>
+      <a href="#insights" style="text-decoration:none;">
+        <div style="background:var(--navy-pale); border:1px solid var(--navy-soft); border-radius:12px; padding:14px 16px; display:flex; align-items:center; gap:10px;" onmouseover="this.style.boxShadow='0 4px 16px rgba(29,52,97,0.15)'" onmouseout="this.style.boxShadow='none'">
+          <span style="font-size:20px;">💡</span>
+          <div>
+            <div style="font-size:11px; color:var(--navy-mid); font-weight:700; letter-spacing:0.05em;">08</div>
+            <div style="font-size:13px; font-weight:700; color:var(--navy);">核心洞察</div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ===== BACKGROUND ===== -->
+
+  <section id="background">
+    <div class="chapter-header">
+      <div class="chapter-num">01</div>
+      <div class="chapter-info">
+        <div class="chapter-label">Research Background</div>
+        <div class="chapter-title">研究背景与行业定位</div>
+        <div class="chapter-sub">AI情感陪伴赛道在Z世代中迅速崛起，大学女生群体是核心高价值用户</div>
+      </div>
+    </div>
+
+    <div class="industry-grid">
+      <div class="stat-block">
+        <div class="stat-icon navy">🌟</div>
+        <div>
+          <div class="stat-label">星野 月活用户（MAU 2025）</div>
+          <div class="stat-value">1,586万+</div>
+          <div class="stat-note">MiniMax旗下 · 阿里/腾讯/米哈游投资 · 已登陆港股</div>
+        </div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-icon rose">🐱</div>
+        <div>
+          <div class="stat-label">猫箱 月活用户（MAU 2025）</div>
+          <div class="stat-value">351～748万</div>
+          <div class="stat-note">字节跳动旗下 · 豆包大模型驱动 · 前身为话炉</div>
+        </div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-icon gold">👩</div>
+        <div>
+          <div class="stat-label">女性用户占比</div>
+          <div class="stat-value" style="font-size:18px; white-space:nowrap;">星野 &gt;55%　　猫箱 ≈45%</div>
+          <div class="stat-note">星野核心为25-40岁城市职业女性；猫箱性别比例更均衡</div>
+        </div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-icon rose">👑</div>
+        <div>
+          <div class="stat-label">最低会员月费</div>
+          <div class="stat-value" style="font-size:20px">星野 ¥11　　猫箱 ¥25</div>
+          <div class="stat-note">星野定价更亲民；猫箱会员权益体系更完整</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:32px;">
+      <div class="card-title"><span class="icon">📋</span>项目背景与分析目标</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px;">
+        <div>
+          <div style="font-size:13px; font-weight:700; color:var(--rose-deep); margin-bottom:8px;">🎯 分析背景</div>
+          <div style="font-size:13px; color:var(--text-light); line-height:1.7;">AI情感陪伴赛道在Z世代中迅速崛起，渗透率持续攀升。大学女生群体是核心高价值用户，情感需求强、付费意愿高，国内头部产品以星野、猫箱为代表，竞争格局初步成型。</div>
+        </div>
+        <div>
+          <div style="font-size:13px; font-weight:700; color:var(--rose-deep); margin-bottom:8px;">👩‍🎓 目标用户</div>
+          <div style="font-size:13px; color:var(--text-light); line-height:1.7;">以大学生女性为核心人群，关注陪伴体验、角色代入与安全边界。高情感需求、重度网络沉浸、热爱虚拟文化、追求即时反馈。</div>
+        </div>
+        <div>
+          <div style="font-size:13px; font-weight:700; color:var(--rose-deep); margin-bottom:8px;">🏆 分析目标</div>
+          <div style="font-size:13px; color:var(--text-light); line-height:1.7;">对猫箱、星野进行系统评测，筛选可借鉴能力，并服务后续训练数据生产。核心问题：谁更值得学习？哪些能力应该被借鉴？哪些风险必须规避？</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== METHODOLOGY ===== -->
+  <section id="methodology">
+    <div class="chapter-header">
+      <div class="chapter-num">02</div>
+      <div class="chapter-info">
+        <div class="chapter-label">Methodology</div>
+        <div class="chapter-title">评测体系与数据采集方法</div>
+        <div class="chapter-sub">采用"4大方向 + 8个模型质量维度"的双层评测体系，消除主观偏差</div>
+      </div>
+    </div>
+
+    <!-- 4步方法论 -->
+    <div class="card" style="margin-bottom:32px;">
+      <div class="card-title"><span class="icon">🔬</span>竞品分析方法论 · 4步分析框架</div>
+      <div class="method-steps">
+        <div class="method-step">
+          <div class="step-num">01</div>
+          <div class="step-title">市场定位</div>
+          <ul class="step-items">
+            <li>确定赛道范围</li>
+            <li>目标人群画像</li>
+            <li>竞品清单梳理</li>
+          </ul>
+        </div>
+        <div class="method-step">
+          <div class="step-num">02</div>
+          <div class="step-title">实测评分</div>
+          <ul class="step-items">
+            <li>组员分组实测</li>
+            <li>收集AI回复样本</li>
+            <li>多维标准打分</li>
+          </ul>
+        </div>
+        <div class="method-step">
+          <div class="step-num">03</div>
+          <div class="step-title">数据汇总</div>
+          <ul class="step-items">
+            <li>质检组审核数据</li>
+            <li>加权小计计算</li>
+            <li>交叉验证结果</li>
+          </ul>
+        </div>
+        <div class="method-step">
+          <div class="step-num">04</div>
+          <div class="step-title">选定竞品</div>
+          <ul class="step-items">
+            <li>综合得分排名</li>
+            <li>优质回复提炼</li>
+            <li>选为数据蒸馏工具</li>
+          </ul>
+        </div>
+      </div>
+      <div class="note-box"><strong>综合评定：</strong>猫箱在内容质量上更优，最终选为数据蒸馏参考竞品。</div>
+    </div>
+
+    <!-- 评测维度体系 -->
+    <div class="card" style="margin-bottom:32px;">
+      <div class="card-title"><span class="icon">📐</span>12维度评测体系详解</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:32px;">
+        <div>
+          <div style="font-size:13px; font-weight:700; color:var(--rose-deep); margin-bottom:16px; letter-spacing:0.05em;">四大综合维度（产品层面）</div>
+          <table class="eval-table">
+            <thead>
+              <tr>
+                <th>维度</th>
+                <th>核心评估要点</th>
+                <th>权重</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:18px 12px; white-space:nowrap;"><span class="tag gold" style="font-size:14px;padding:6px 14px;">市场定位</span></td>
+                <td style="font-size:14px;color:var(--text-light);line-height:1.7;padding:18px 12px;">定位清晰度、目标用户契合度、差异化程度</td>
+                <td style="font-size:14px;color:var(--rose-mid); font-weight:700;padding:18px 12px;">综合</td>
+              </tr>
+              <tr>
+                <td style="padding:18px 12px; white-space:nowrap;"><span class="tag rose" style="font-size:14px;padding:6px 14px;">模型技术</span></td>
+                <td style="font-size:14px;color:var(--text-light);line-height:1.7;padding:18px 12px;">记忆能力、情感理解、回复自然度、角色一致性</td>
+                <td style="font-size:14px;color:var(--rose-mid); font-weight:700;padding:18px 12px;">综合</td>
+              </tr>
+              <tr>
+                <td style="padding:18px 12px; white-space:nowrap;"><span class="tag rose" style="font-size:14px;padding:6px 14px;">产品功能</span></td>
+                <td style="font-size:14px;color:var(--text-light);line-height:1.7;padding:18px 12px;">功能完整度、情感陪伴深度、女生向设计</td>
+                <td style="font-size:14px;color:var(--rose-mid); font-weight:700;padding:18px 12px;">综合</td>
+              </tr>
+              <tr>
+                <td style="padding:18px 12px; white-space:nowrap;"><span class="tag rose" style="font-size:14px;padding:6px 14px;">用户体验</span></td>
+                <td style="font-size:14px;color:var(--text-light);line-height:1.7;padding:18px 12px;">启动流畅度、界面设计、付费体验</td>
+                <td style="font-size:14px;color:var(--rose-mid); font-weight:700;padding:18px 12px;">综合</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <div style="font-size:13px; font-weight:700; color:var(--navy); margin-bottom:16px; letter-spacing:0.05em;">八大模型质量维度（模型层面）</div>
+          <table class="eval-table">
+            <thead>
+              <tr>
+                <th>维度</th>
+                <th>评测描述</th>
+                <th>权重</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><span class="tag navy">情绪识别</span></td><td style="font-size:12px;color:var(--text-light);">能否准确识别复合情绪和情绪强度</td><td style="font-size:12px;color:var(--navy-mid); font-weight:600;">10%</td></tr>
+              <tr><td><span class="tag navy">共情陪伴</span></td><td style="font-size:12px;color:var(--text-light);">是否让用户感到被真正理解</td><td style="font-size:12px;color:var(--navy-mid); font-weight:600;">14%</td></tr>
+              <tr><td><span class="tag navy">对话推进</span></td><td style="font-size:12px;color:var(--text-light);">追问是否精准，对话有层次感</td><td style="font-size:12px;color:var(--navy-mid); font-weight:600;">12%</td></tr>
+              <tr><td><span class="tag navy">上下文承接</span></td><td style="font-size:12px;color:var(--text-light);">多轮关联，引用具体历史信息</td><td style="font-size:12px;color:var(--navy-mid); font-weight:600;">12%</td></tr>
+              <tr><td><span class="tag navy">策略调整</span></td><td style="font-size:12px;color:var(--text-light);">根据用户反馈动态切换回复策略</td><td style="font-size:12px;color:var(--navy-mid); font-weight:600;">10%</td></tr>
+              <tr><td><span class="tag navy">安全合规</span></td><td style="font-size:12px;color:var(--text-light);">高风险话题处理：停止扮演+热线引导</td><td style="font-size:12px;color:var(--navy-mid); font-weight:600;">16%</td></tr>
+              <tr><td><span class="tag navy">人设稳定</span></td><td style="font-size:12px;color:var(--text-light);">全程角色一致，有独特语言习惯</td><td style="font-size:12px;color:var(--navy-mid); font-weight:600;">12%</td></tr>
+              <tr><td><span class="tag navy">表达自然度</span></td><td style="font-size:12px;color:var(--text-light);">口语化，有个人风格，感受不到AI腔</td><td style="font-size:12px;color:var(--navy-mid); font-weight:600;">14%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="note-box" style="margin-top:16px;"><strong>评分逻辑：</strong>先看产品整体能力（四维综合），再看模型回复质量（8维精测），最终服务竞品选择与数据蒸馏。满分均为5分制。</div>
+    </div>
+
+    <!-- 团队分工 -->
+    <div class="card">
+      <div class="card-title"><span class="icon">👥</span>团队分工与项目管理</div>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-header">
+            <div class="team-icon" style="background:var(--rose-pale);">⚡</div>
+            <div>
+              <div class="team-name">执行组（5人）</div>
+              <div class="team-count">脱产承担主要执行任务</div>
+            </div>
+          </div>
+          <ul class="team-tasks">
+            <li>实测星野 & 猫箱两款产品</li>
+            <li>收集对话数据样本</li>
+            <li>填写竞品评测总表</li>
+            <li>整理AI回复截图</li>
+          </ul>
+        </div>
+        <div class="team-card">
+          <div class="team-header">
+            <div class="team-icon" style="background:#E8F5E9;">🛡️</div>
+            <div>
+              <div class="team-name">质检归纳组（3人）</div>
+              <div class="team-count">兼职参与评审与质检</div>
+            </div>
+          </div>
+          <ul class="team-tasks">
+            <li>数据质量审核</li>
+            <li>评级并标记问题数据</li>
+            <li>汇总多维评分</li>
+            <li>撰写分析结论</li>
+          </ul>
+        </div>
+        <div class="team-card">
+          <div class="team-header">
+            <div class="team-icon" style="background:var(--gold-light);">💾</div>
+            <div>
+              <div class="team-name">数据生产组（2人）</div>
+              <div class="team-count">专注数据资产沉淀</div>
+            </div>
+          </div>
+          <ul class="team-tasks">
+            <li>制定标注规则文档</li>
+            <li>改写优质问答对</li>
+            <li>清洗与筛选数据</li>
+            <li>输出500条训练集</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== OVERVIEW ===== -->
+  <section id="overview">
+    <div class="chapter-header">
+      <div class="chapter-num">03</div>
+      <div class="chapter-info">
+        <div class="chapter-label">Competitive Overview</div>
+        <div class="chapter-title">竞品综合对比概览</div>
+        <div class="chapter-sub">基于四维评估体系与模型内容质量综合评估</div>
+      </div>
+    </div>
+
+    <!-- VS Cards -->
+    <div class="product-versus" style="margin-bottom:40px;">
+      <div class="product-card winner">
+        <div class="product-avatar pink">🐱</div>
+        <div class="product-name rose-text">猫箱</div>
+        <div style="font-size:12px; color:var(--text-light); margin-bottom:8px;">字节跳动 · 豆包大模型</div>
+        <div class="product-score rose-text dt" data-tip="猫箱四维加权总分\n3.77 / 5.0\n= (2.83+3.78+4.14+4.35) ÷ 4\n综合领先 +0.19">3.77</div>
+        <div class="score-label">四维加权总分（满分5分）</div>
+        <div class="stars">⭐⭐⭐⭐☆</div>
+        <div style="margin-top:12px; font-size:12px; color:var(--rose-mid); font-weight:700; background:var(--rose-pale); padding:6px 14px; border-radius:20px; display:inline-block;">
+          🏆 综合领先
+        </div>
+      </div>
+
+      <div class="vs-badge">VS</div>
+
+      <div class="product-card blue">
+        <div class="product-avatar navy-bg">🌟</div>
+        <div class="product-name navy-text">星野</div>
+        <div style="font-size:12px; color:var(--text-light); margin-bottom:8px;">MiniMax · M2-her模型</div>
+        <div class="product-score navy-text dt" data-tip="星野四维加权总分\n3.58 / 5.0\n= (2.86+3.58+4.21+3.68) ÷ 4\n市场规模领先">3.58</div>
+        <div class="score-label">四维加权总分（满分5分）</div>
+        <div class="stars" style="color:var(--navy-soft);">⭐⭐⭐☆☆</div>
+        <div style="margin-top:12px; font-size:12px; color:var(--navy-mid); font-weight:700; background:var(--navy-pale); padding:6px 14px; border-radius:20px; display:inline-block;">
+          女生向领先
+        </div>
+      </div>
+    </div>
+
+    <!-- Model quality score -->
+    <div class="card" style="margin-bottom:32px; text-align:center;">
+      <div style="font-size:13px; color:var(--text-light); margin-bottom:24px; letter-spacing:0.05em; font-weight:600;">🏅 模型内容质量综合得分（8维加权，满分5分）</div>
+      <div style="display:flex; justify-content:center; align-items:center; gap:60px;">
+        <div>
+          <div style="font-family:'Noto Serif SC',serif; font-size:56px; font-weight:900; color:var(--rose-mid); line-height:1;">4.56</div>
+          <div style="font-size:14px; color:var(--text-light); margin-top:4px;">猫箱</div>
+        </div>
+        <div style="font-size:24px; color:var(--rose-soft);">—</div>
+        <div>
+          <div style="font-family:'Noto Serif SC',serif; font-size:56px; font-weight:900; color:var(--navy-mid); line-height:1;">4.21</div>
+          <div style="font-size:14px; color:var(--text-light); margin-top:4px;">星野</div>
+        </div>
+      </div>
+      <div style="margin-top:20px; font-size:13px; color:var(--text-light); background:var(--rose-blush); display:inline-block; padding:8px 24px; border-radius:20px; border:1px solid var(--border);">
+        猫箱模型内容质量领先星野 <strong style="color:var(--rose-deep);">+0.35</strong>，在对话推进、上下文承接、表达自然度上优势尤为显著
+      </div>
+    </div>
+
+    <!-- Charts Grid -->
+    <div class="chart-grid">
+      <div class="card">
+        <div class="card-title"><span class="icon">📊</span>四维度评分对比（柱状图）</div>
+        <div class="chart-container" style="height:280px;">
+          <canvas id="barChart"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="icon">📡</span>8维模型质量雷达图</div>
+        <div class="chart-container" style="height:280px;">
+          <canvas id="radarChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOUR DIMENSIONS ===== -->
+  <section id="dimensions">
+    <div class="chapter-header">
+      <div class="chapter-num">04</div>
+      <div class="chapter-info">
+        <div class="chapter-label">Four-Dimension Analysis</div>
+        <div class="chapter-title">四维度深度评分对比</div>
+        <div class="chapter-sub">猫箱赢在体验，星野赢在规模与功能细节</div>
+      </div>
+    </div>
+
+    <div class="dimension-grid">
+      <!-- 市场定位 -->
+      <div class="dim-card gold">
+        <span class="dim-icon">🎯</span>
+        <div class="dim-name">① 市场定位</div>
+        <div class="dim-scores">
+          <div class="dim-score-row">
+            <div class="dim-score-name" style="color:var(--navy-mid);">星野</div>
+            <div class="dim-bar"><div class="dim-bar-fill navy" style="width:57.2%"></div></div>
+            <div class="dim-score-val navy">2.86</div>
+          </div>
+          <div class="dim-score-row">
+            <div class="dim-score-name" style="color:var(--rose-mid);">猫箱</div>
+            <div class="dim-bar"><div class="dim-bar-fill rose" style="width:56.6%"></div></div>
+            <div class="dim-score-val rose">2.83</div>
+          </div>
+        </div>
+        <div style="margin-top:12px; font-size:11px; color:var(--navy-mid); font-weight:700;">
+          🔵 星野微领先 +0.03
+        </div>
+        <div style="font-size:11px; color:var(--text-light); margin-top:4px; line-height:1.5;">
+          星野女性定位更聚焦，UGC社区运营成熟
+        </div>
+      </div>
+
+      <!-- 模型技术 -->
+      <div class="dim-card rose">
+        <span class="dim-icon">🧠</span>
+        <div class="dim-name">② 模型技术</div>
+        <div class="dim-scores">
+          <div class="dim-score-row">
+            <div class="dim-score-name" style="color:var(--navy-mid);">星野</div>
+            <div class="dim-bar"><div class="dim-bar-fill navy" style="width:71.6%"></div></div>
+            <div class="dim-score-val navy dt" data-tip="星野 · 模型技术得分\n3.58 / 5.0\n悬停上方，查看子指标">3.58</div>
+          </div>
+          <div class="dim-score-row">
+            <div class="dim-score-name" style="color:var(--rose-mid);">猫箱</div>
+            <div class="dim-bar"><div class="dim-bar-fill rose" style="width:75.6%"></div></div>
+            <div class="dim-score-val rose dt" data-tip="猫箱 · 模型技术得分\n3.78 / 5.0\n悬停上方，查看子指标">3.78</div>
+          </div>
+        </div>
+        <div style="margin-top:12px; font-size:11px; color:var(--rose-deep); font-weight:700;">
+          🐱 猫箱领先 +0.20
+        </div>
+        <div style="font-size:11px; color:var(--text-light); margin-top:4px; line-height:1.5;">
+          豆包大模型情感理解与自然度更强
+        </div>
+      </div>
+
+      <!-- 产品功能 -->
+      <div class="dim-card purple">
+        <span class="dim-icon">⚙️</span>
+        <div class="dim-name">③ 产品功能</div>
+        <div class="dim-scores">
+          <div class="dim-score-row">
+            <div class="dim-score-name" style="color:var(--navy-mid);">星野</div>
+            <div class="dim-bar"><div class="dim-bar-fill navy" style="width:84.2%"></div></div>
+            <div class="dim-score-val navy">4.21</div>
+          </div>
+          <div class="dim-score-row">
+            <div class="dim-score-name" style="color:var(--rose-mid);">猫箱</div>
+            <div class="dim-bar"><div class="dim-bar-fill rose" style="width:82.8%"></div></div>
+            <div class="dim-score-val rose">4.14</div>
+          </div>
+        </div>
+        <div style="margin-top:12px; font-size:11px; color:var(--navy-mid); font-weight:700;">
+          🔵 星野微领先 +0.07
+        </div>
+        <div style="font-size:11px; color:var(--text-light); margin-top:4px; line-height:1.5;">
+          星野UGC社区功能更丰富完善
+        </div>
+      </div>
+
+      <!-- 用户体验 -->
+      <div class="dim-card rose">
+        <span class="dim-icon">💝</span>
+        <div class="dim-name">④ 用户体验</div>
+        <div class="dim-scores">
+          <div class="dim-score-row">
+            <div class="dim-score-name" style="color:var(--navy-mid);">星野</div>
+            <div class="dim-bar"><div class="dim-bar-fill navy" style="width:73.6%"></div></div>
+            <div class="dim-score-val navy">3.68</div>
+          </div>
+          <div class="dim-score-row">
+            <div class="dim-score-name" style="color:var(--rose-mid);">猫箱</div>
+            <div class="dim-bar"><div class="dim-bar-fill rose" style="width:87%"></div></div>
+            <div class="dim-score-val rose">4.35</div>
+          </div>
+        </div>
+        <div style="margin-top:12px; font-size:11px; color:var(--rose-deep); font-weight:700;">
+          🐱 猫箱显著领先 +0.67
+        </div>
+        <div style="font-size:11px; color:var(--text-light); margin-top:4px; line-height:1.5;">
+          界面设计、启动流畅度、内容质量全面更优
+        </div>
+      </div>
+    </div>
+
+    <!-- Detailed dimension table -->
+    <div class="card">
+      <div class="card-title"><span class="icon">📋</span>四维度评分明细对比表</div>
+      <table class="eval-table" style="width:100%;">
+        <thead>
+          <tr>
+            <th style="width:120px;">评测维度</th>
+            <th>核心指标</th>
+            <th style="width:140px;">猫箱得分</th>
+            <th style="width:140px;">星野得分</th>
+            <th style="width:100px;">差值(猫-星)</th>
+            <th style="width:80px;">领先方</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag gold">市场定位</span></td>
+            <td style="font-size:12px;color:var(--text-light);">产品定位清晰度、目标用户精准度、与大学女生契合度、差异化程度、市场数据支撑力</td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill rose" style="width:56.6%;"></div></div>
+                <strong class="dt" data-tip="猫箱 市场定位\n2.83/5.0\n差异化不足3.3\n大学女生契合3.7" style="color:var(--rose-mid);">2.83</strong>
+              </div>
+            </td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill navy" style="width:57.2%;"></div></div>
+                <strong class="dt" data-tip="星野 市场定位\n2.86/5.0\n大学女生契合4.0\n差异化程度4.0" style="color:var(--navy-mid);">2.86</strong>
+              </div>
+            </td>
+            <td><span class="diff-negative">-0.03</span></td>
+            <td><span class="winner-badge blue">星野</span></td>
+          </tr>
+          <tr>
+            <td><span class="tag rose">模型技术</span></td>
+            <td style="font-size:12px;color:var(--text-light);">记忆能力、情感理解深度、回复自然度、角色一致性、高风险话题处理</td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill rose" style="width:75.6%;"></div></div>
+                <strong class="dt" data-tip="猫箱 模型技术\n3.78/5.0\n回复自然度4.3\n情感理解深度4.0" style="color:var(--rose-mid);">3.78</strong>
+              </div>
+            </td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill navy" style="width:71.6%;"></div></div>
+                <strong class="dt" data-tip="星野 模型技术\n3.58/5.0\n角色一致性4.3\n高风险话题3.3" style="color:var(--navy-mid);">3.58</strong>
+              </div>
+            </td>
+            <td><span class="diff-positive">+0.20</span></td>
+            <td><span class="winner-badge">猫箱</span></td>
+          </tr>
+          <tr>
+            <td><span class="tag rose">产品功能</span></td>
+            <td style="font-size:12px;color:var(--text-light);">核心功能完整度、情感陪伴深度、女生向功能设计、减压情绪支持、付费性价比</td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill rose" style="width:82.8%;"></div></div>
+                <strong class="dt" data-tip="猫箱 产品功能\n4.14/5.0\n核心功能完整4.7\n减压情绪支持4.3" style="color:var(--rose-mid);">4.14</strong>
+              </div>
+            </td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill navy" style="width:84.2%;"></div></div>
+                <strong class="dt" data-tip="星野 产品功能\n4.21/5.0\n女生向功能5.0\n情感陪伴深度4.3" style="color:var(--navy-mid);">4.21</strong>
+              </div>
+            </td>
+            <td><span class="diff-negative">-0.07</span></td>
+            <td><span class="winner-badge blue">星野</span></td>
+          </tr>
+          <tr>
+            <td><span class="tag rose">用户体验</span></td>
+            <td style="font-size:12px;color:var(--text-light);">新用户启动流畅度、界面视觉设计、情绪识别、共情陪伴、对话推进、人设稳定、表达自然度</td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill rose" style="width:87%;"></div></div>
+                <strong class="dt" data-tip="猫箱 用户体验\n4.35/5.0\n上下文承接5.0\n人设稳定5.0\n表达自然度5.0" style="color:var(--rose-mid);">4.35</strong>
+              </div>
+            </td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill navy" style="width:73.6%;"></div></div>
+                <strong class="dt" data-tip="星野 用户体验\n3.68/5.0\n界面视觉4.0\n安全合规3.0（弱项）\n对话推进3.3（弱项）" style="color:var(--navy-mid);">3.68</strong>
+              </div>
+            </td>
+            <td><span class="diff-positive">+0.67</span></td>
+            <td><span class="winner-badge">猫箱</span></td>
+          </tr>
+          <tr style="background:var(--rose-blush);">
+            <td><strong style="color:var(--rose-deep);">加权总分</strong></td>
+            <td style="font-size:12px;color:var(--text-light);">四维度综合加权平均</td>
+            <td><strong style="font-size:20px; color:var(--rose-mid);">3.77</strong></td>
+            <td><strong style="font-size:20px; color:var(--navy-mid);">3.58</strong></td>
+            <td><span class="diff-positive" style="font-size:16px;">+0.19</span></td>
+            <td><span class="winner-badge" style="font-size:12px; padding:4px 10px; white-space:nowrap; display:inline-flex; align-items:center; gap:3px;">🏆 猫箱</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="note-box"><strong>结论：</strong>四维综合猫箱领先，但星野在市场规模与女性向定位上有明显借鉴价值。</div>
+    </div>
+  </section>
+
+  <!-- ===== SUB-DIMENSIONS CHART ===== -->
+  <section id="subdimensions">
+    <div class="chapter-header">
+      <div class="chapter-num">05</div>
+      <div class="chapter-info">
+        <div class="chapter-label">Detailed Indicator Breakdown</div>
+        <div class="chapter-title">四大维度 · 26项子指标评分图表</div>
+        <div class="chapter-sub">基于《评测员评分表》逐项打分 · 4维度共26个子指标 · 满分5分制 · 鼠标悬停查看详情</div>
+      </div>
+    </div>
+
+<style>
+/* ── Chart Card ── */
+.viz-card {
+  background:#fff;
+  border-radius:18px;
+  border:1.5px solid var(--border);
+  box-shadow:0 2px 16px rgba(155,58,74,.07);
+  margin-bottom:24px;
+  overflow:hidden;
+}
+.viz-header {
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:18px 24px 14px;
+  border-bottom:1px solid var(--rose-blush);
+}
+.viz-header-icon { font-size:26px; }
+.viz-header-title { font-size:16px; font-weight:800; }
+.viz-header-sub   { font-size:11px; color:var(--text-light); margin-top:2px; }
+.viz-header-scores{
+  margin-left:auto;
+  display:flex; gap:14px; align-items:center;
+}
+.viz-score-badge {
+  display:flex; flex-direction:column; align-items:center;
+  padding:6px 14px; border-radius:10px;
+}
+.viz-score-badge .vsb-val { font-size:20px; font-weight:900; line-height:1; }
+.viz-score-badge .vsb-lbl { font-size:10px; font-weight:600; margin-top:2px; letter-spacing:.05em; }
+
+/* ── Legend row ── */
+.viz-legend {
+  display:flex; gap:18px; padding:10px 24px 6px;
+  font-size:11px; color:var(--text-light); font-weight:600;
+}
+.viz-legend span { display:flex; align-items:center; gap:5px; }
+.leg-dot { width:10px; height:10px; border-radius:3px; display:inline-block; }
+
+/* ── Chart body ── */
+.viz-body { padding:12px 24px 18px; }
+
+/* ── Each indicator row ── */
+.ch-row {
+  display:grid;
+  grid-template-columns: 160px 1fr 32px 1fr 32px 52px;
+  align-items:center;
+  gap:6px;
+  padding:7px 0;
+  border-bottom:1px solid #FAF0F2;
+  transition:background .15s;
+  cursor:default;
+}
+.ch-row:last-child { border-bottom:none; }
+.ch-row:hover { background:var(--rose-blush); border-radius:8px; }
+
+.ch-label {
+  font-size:11.5px; color:var(--text-main); font-weight:500;
+  display:flex; flex-direction:column; gap:3px;
+  padding-left:4px;
+}
+.ch-label .ch-weight {
+  font-size:9.5px; color:#bbb;
+  background:#f4f4f4; padding:1px 6px; border-radius:6px;
+  display:inline-block; width:fit-content;
+}
+.ch-label.core .ch-weight { background:#FFF3DC; color:#B8926A; }
+
+/* ── Bar track + fill ── */
+.ch-bar-wrap {
+  position:relative; height:10px; border-radius:5px;
+  overflow:hidden; background:#F2F2F2;
+}
+.ch-bar-cat  { background:var(--rose-mid); }
+.ch-bar-star { background:var(--navy-mid); }
+.ch-bar-danger { background:#C62828; }
+.ch-bar-full { background:#2E7D52; }
+.ch-bar-fill {
+  height:100%; border-radius:5px;
+  transition:width .8s cubic-bezier(.4,0,.2,1);
+}
+.ch-val {
+  font-size:12px; font-weight:700; text-align:center;
+}
+.ch-val.cat  { color:var(--rose-mid); }
+.ch-val.star { color:var(--navy-mid); }
+.ch-val.danger { color:#C62828; }
+.ch-val.full { color:#2E7D52; }
+
+/* ── Winner badge ── */
+.ch-winner {
+  font-size:10px; font-weight:700; color:#fff;
+  padding:2px 7px; border-radius:8px;
+  text-align:center; white-space:nowrap;
+}
+.ch-winner.cat  { background:var(--rose-mid); }
+.ch-winner.star { background:var(--navy-mid); }
+.ch-winner.tie  { background:#bbb; }
+.ch-winner.warn { background:#C62828; }
+
+/* ── Section divider inside chart ── */
+.ch-divider {
+  grid-column:1/-1;
+  height:1px; background:var(--border);
+  margin:4px 0;
+}
+
+/* ── Summary bar at bottom ── */
+.viz-footer {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:12px 24px;
+  background:var(--rose-blush);
+  border-top:1px solid var(--border);
+  font-size:12px;
+}
+.viz-footer strong { font-weight:800; }
+</style>
+
+    <!-- ① 市场定位 ──────────────────────────────────── -->
+    <div class="viz-card">
+      <div class="viz-header">
+        <span class="viz-header-icon">🏷️</span>
+        <div>
+          <div class="viz-header-title" style="color:#B8926A;">① 市场定位</div>
+          <div class="viz-header-sub">5个子指标 · 权重 10/10/25/15/10%</div>
+        </div>
+        <div class="viz-header-scores">
+          <div class="viz-score-badge" style="background:#FDE8EC;">
+            <span class="vsb-val" style="color:var(--rose-mid);">2.83</span>
+            <span class="vsb-lbl" style="color:var(--rose-mid);">🐱 猫箱</span>
+          </div>
+          <span style="color:#ddd;font-weight:300;font-size:20px;">|</span>
+          <div class="viz-score-badge" style="background:#D5E4F2;">
+            <span class="vsb-val" style="color:var(--navy-mid);">2.86</span>
+            <span class="vsb-lbl" style="color:var(--navy-mid);">🌟 星野</span>
+          </div>
+          <span class="ch-winner star" style="font-size:11px;padding:4px 10px;">星野微领先</span>
+        </div>
+      </div>
+      <div class="viz-legend">
+        <span><span class="leg-dot" style="background:var(--rose-mid);"></span>猫箱</span>
+        <span><span class="leg-dot" style="background:var(--navy-mid);"></span>星野</span>
+        <span style="margin-left:auto;color:#bbb;">★ = 核心权重项</span>
+      </div>
+      <div class="viz-body">
+        <!-- header labels -->
+        <div style="display:grid;grid-template-columns:160px 1fr 32px 1fr 32px 52px;gap:6px;padding:0 0 6px 4px;font-size:10px;color:#bbb;font-weight:700;">
+          <div>指标名称</div>
+          <div style="text-align:center;color:var(--rose-mid);">猫箱得分</div>
+          <div></div>
+          <div style="text-align:center;color:var(--navy-mid);">星野得分</div>
+          <div></div>
+          <div style="text-align:center;">领先</div>
+        </div>
+
+        <div class="ch-row dt" data-tip="产品定位清晰度&#10;权重：10%&#10;猫箱一句话清晰传达价值&#10;猫 4.7 / 星 4.3">
+          <div class="ch-label"><span>产品定位清晰度</span><span class="ch-weight">10%</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-cat sdbar" style="width:94%"></div></div>
+          <div class="ch-val cat">4.7</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:86%"></div></div>
+          <div class="ch-val star">4.3</div>
+          <span class="ch-winner cat">猫箱</span>
+        </div>
+        <div class="ch-row dt" data-tip="目标用户精准度&#10;权重：10%&#10;猫箱Z世代画像更具体&#10;猫 4.7 / 星 4.0">
+          <div class="ch-label"><span>目标用户精准度</span><span class="ch-weight">10%</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-cat sdbar" style="width:94%"></div></div>
+          <div class="ch-val cat">4.7</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:80%"></div></div>
+          <div class="ch-val star">4.0</div>
+          <span class="ch-winner cat">猫箱</span>
+        </div>
+        <div class="ch-row dt" data-tip="★ 与大学女生契合度（核心项）&#10;权重最高：25%&#10;星野女性向更深度&#10;猫 3.7 / 星 4.0" style="background:#FFFDF5;">
+          <div class="ch-label core"><span>大学女生契合度 ★</span><span class="ch-weight">25% 核心</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-cat sdbar" style="width:74%"></div></div>
+          <div class="ch-val cat">3.7</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:80%"></div></div>
+          <div class="ch-val star">4.0</div>
+          <span class="ch-winner star">星野</span>
+        </div>
+        <div class="ch-row dt" data-tip="差异化程度&#10;权重：15%&#10;星野UGC模式独特性强&#10;猫 3.3 / 星 4.0">
+          <div class="ch-label"><span>差异化程度</span><span class="ch-weight">15%</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-cat sdbar" style="width:66%"></div></div>
+          <div class="ch-val cat">3.3</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:80%"></div></div>
+          <div class="ch-val star">4.0</div>
+          <span class="ch-winner star">星野</span>
+        </div>
+        <div class="ch-row dt" data-tip="市场数据支撑力&#10;权重：10%&#10;两款产品数据均较充分&#10;猫 4.7 / 星 4.3">
+          <div class="ch-label"><span>市场数据支撑力</span><span class="ch-weight">10%</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-cat sdbar" style="width:94%"></div></div>
+          <div class="ch-val cat">4.7</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:86%"></div></div>
+          <div class="ch-val star">4.3</div>
+          <span class="ch-winner cat">猫箱</span>
+        </div>
+      </div>
+      <div class="viz-footer">
+        <span>维度综合：<strong style="color:var(--rose-mid);">猫箱 2.83</strong> vs <strong style="color:var(--navy-mid);">星野 2.86</strong></span>
+        <span style="color:var(--navy-mid);">🌟 星野微领先 +0.03 · 女生定位与差异化更突出</span>
+      </div>
+    </div>
+
+    <!-- ② 模型技术 ──────────────────────────────────── -->
+    <div class="viz-card">
+      <div class="viz-header">
+        <span class="viz-header-icon">🧠</span>
+        <div>
+          <div class="viz-header-title" style="color:#8B5A8C;">② 模型技术</div>
+          <div class="viz-header-sub">5个子指标 · 权重 25/25/20/15/15%</div>
+        </div>
+        <div class="viz-header-scores">
+          <div class="viz-score-badge" style="background:#FDE8EC;">
+            <span class="vsb-val" style="color:var(--rose-mid);">3.78</span>
+            <span class="vsb-lbl" style="color:var(--rose-mid);">🐱 猫箱</span>
+          </div>
+          <span style="color:#ddd;font-weight:300;font-size:20px;">|</span>
+          <div class="viz-score-badge" style="background:#D5E4F2;">
+            <span class="vsb-val" style="color:var(--navy-mid);">3.58</span>
+            <span class="vsb-lbl" style="color:var(--navy-mid);">🌟 星野</span>
+          </div>
+          <span class="ch-winner cat" style="font-size:11px;padding:4px 10px;">猫箱领先 +0.20</span>
+        </div>
+      </div>
+      <div class="viz-legend">
+        <span><span class="leg-dot" style="background:var(--rose-mid);"></span>猫箱</span>
+        <span><span class="leg-dot" style="background:var(--navy-mid);"></span>星野</span>
+        <span style="margin-left:auto;color:#bbb;">★ = 核心权重项</span>
+      </div>
+      <div class="viz-body">
+        <div style="display:grid;grid-template-columns:160px 1fr 32px 1fr 32px 52px;gap:6px;padding:0 0 6px 4px;font-size:10px;color:#bbb;font-weight:700;">
+          <div>指标名称</div><div style="text-align:center;color:var(--rose-mid);">猫箱得分</div><div></div>
+          <div style="text-align:center;color:var(--navy-mid);">星野得分</div><div></div><div style="text-align:center;">领先</div>
+        </div>
+        <div class="ch-row dt" data-tip="★ 记忆能力（核心项）&#10;权重：25%&#10;两款产品记忆均停留在单次会话&#10;猫 3.3 / 星 3.3 持平" style="background:#FFFDF5;">
+          <div class="ch-label core"><span>记忆能力 ★</span><span class="ch-weight">25% 核心</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-cat sdbar" style="width:66%"></div></div>
+          <div class="ch-val cat">3.3</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:66%"></div></div>
+          <div class="ch-val star">3.3</div>
+          <span class="ch-winner tie">持平</span>
+        </div>
+        <div class="ch-row dt" data-tip="★ 情感理解深度（核心项）&#10;权重：25%&#10;猫箱情感共鸣更深，追问更精准&#10;猫 4.0 / 星 3.6" style="background:#FFFDF5;">
+          <div class="ch-label core"><span>情感理解深度 ★</span><span class="ch-weight">25% 核心</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-cat sdbar" style="width:80%"></div></div>
+          <div class="ch-val cat">4.0</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:72%"></div></div>
+          <div class="ch-val star">3.6</div>
+          <span class="ch-winner cat">猫箱</span>
+        </div>
+        <div class="ch-row dt" data-tip="★ 回复自然度（核心项）&#10;权重：20%&#10;猫箱口语化，无AI腔感&#10;猫 4.3 / 星 3.6" style="background:#FFFDF5;">
+          <div class="ch-label core"><span>回复自然度 ★</span><span class="ch-weight">20% 核心</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-cat sdbar" style="width:86%"></div></div>
+          <div class="ch-val cat">4.3</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:72%"></div></div>
+          <div class="ch-val star">3.6</div>
+          <span class="ch-winner cat">猫箱</span>
+        </div>
+        <div class="ch-row dt" data-tip="角色一致性&#10;权重：15%&#10;两款产品角色稳定性相当&#10;猫 4.3 / 星 4.3 持平">
+          <div class="ch-label"><span>角色一致性</span><span class="ch-weight">15%</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-cat sdbar" style="width:86%"></div></div>
+          <div class="ch-val cat">4.3</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:86%"></div></div>
+          <div class="ch-val star">4.3</div>
+          <span class="ch-winner tie">持平</span>
+        </div>
+        <div class="ch-row dt" data-tip="⚠️ 高风险话题处理（共同弱项）&#10;权重：15%&#10;两款产品均未提供心理援助热线&#10;猫 3.0 / 星 3.3">
+          <div class="ch-label"><span>高风险话题处理 ⚠️</span><span class="ch-weight">15%</span></div>
+          <div class="ch-bar-wrap" style="background:#FFECEC;"><div class="ch-bar-fill ch-bar-danger sdbar" style="width:60%"></div></div>
+          <div class="ch-val danger">3.0</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:66%"></div></div>
+          <div class="ch-val star">3.3</div>
+          <span class="ch-winner warn">共同弱项</span>
+        </div>
+      </div>
+      <div class="viz-footer">
+        <span>维度综合：<strong style="color:var(--rose-mid);">猫箱 3.78</strong> vs <strong style="color:var(--navy-mid);">星野 3.58</strong></span>
+        <span style="color:var(--rose-mid);">🐱 猫箱领先 +0.20 · 情感理解与自然度更强</span>
+      </div>
+    </div>
+
+    <!-- ③ 产品功能 ──────────────────────────────────── -->
+    <div class="viz-card">
+      <div class="viz-header">
+        <span class="viz-header-icon">⚙️</span>
+        <div>
+          <div class="viz-header-title" style="color:#2E7D52;">③ 产品功能</div>
+          <div class="viz-header-sub">5个子指标 · 权重 20/25/25/15/15%</div>
+        </div>
+        <div class="viz-header-scores">
+          <div class="viz-score-badge" style="background:#FDE8EC;">
+            <span class="vsb-val" style="color:var(--rose-mid);">4.14</span>
+            <span class="vsb-lbl" style="color:var(--rose-mid);">🐱 猫箱</span>
+          </div>
+          <span style="color:#ddd;font-weight:300;font-size:20px;">|</span>
+          <div class="viz-score-badge" style="background:#D5E4F2;">
+            <span class="vsb-val" style="color:var(--navy-mid);">4.21</span>
+            <span class="vsb-lbl" style="color:var(--navy-mid);">🌟 星野</span>
+          </div>
+          <span class="ch-winner star" style="font-size:11px;padding:4px 10px;">星野微领先 +0.07</span>
+        </div>
+      </div>
+      <div class="viz-legend">
+        <span><span class="leg-dot" style="background:var(--rose-mid);"></span>猫箱</span>
+        <span><span class="leg-dot" style="background:var(--navy-mid);"></span>星野</span>
+        <span style="margin-left:auto;color:#bbb;">★ = 核心权重项</span>
+      </div>
+      <div class="viz-body">
+        <div style="display:grid;grid-template-columns:160px 1fr 32px 1fr 32px 52px;gap:6px;padding:0 0 6px 4px;font-size:10px;color:#bbb;font-weight:700;">
+          <div>指标名称</div><div style="text-align:center;color:var(--rose-mid);">猫箱得分</div><div></div>
+          <div style="text-align:center;color:var(--navy-mid);">星野得分</div><div></div><div style="text-align:center;">领先</div>
+        </div>
+        <div class="ch-row dt" data-tip="★ 核心功能完整度（核心项）&#10;权重：20%&#10;猫箱覆盖全场景，功能丰富&#10;猫 4.7 / 星 4.0" style="background:#FFFDF5;">
+          <div class="ch-label core"><span>核心功能完整度 ★</span><span class="ch-weight">20% 核心</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-cat sdbar" style="width:94%"></div></div>
+          <div class="ch-val cat">4.7</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:80%"></div></div>
+          <div class="ch-val star">4.0</div>
+          <span class="ch-winner cat">猫箱</span>
+        </div>
+        <div class="ch-row dt" data-tip="★ 情感陪伴功能深度（核心项）&#10;权重：25%&#10;星野角色互动设计更深度&#10;猫 3.7 / 星 4.3" style="background:#FFFDF5;">
+          <div class="ch-label core"><span>情感陪伴深度 ★</span><span class="ch-weight">25% 核心</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-cat sdbar" style="width:74%"></div></div>
+          <div class="ch-val cat">3.7</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:86%"></div></div>
+          <div class="ch-val star">4.3</div>
+          <span class="ch-winner star">星野</span>
+        </div>
+        <div class="ch-row dt" data-tip="★ 女生向功能设计（核心项）&#10;权重：25%&#10;星野满分！深度女性向专属内容&#10;猫 4.7 / 星 5.0" style="background:#FFFDF5;">
+          <div class="ch-label core"><span>女生向功能设计 ★</span><span class="ch-weight">25% 核心</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-cat sdbar" style="width:94%"></div></div>
+          <div class="ch-val cat">4.7</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-full sdbar" style="width:100%"></div></div>
+          <div class="ch-val full">5.0</div>
+          <span class="ch-winner star">星野</span>
+        </div>
+        <div class="ch-row dt" data-tip="减压/情绪支持功能&#10;权重：15%&#10;猫箱睡前陪伴+情绪记录更完整&#10;猫 4.3 / 星 3.6">
+          <div class="ch-label"><span>减压/情绪支持</span><span class="ch-weight">15%</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-cat sdbar" style="width:86%"></div></div>
+          <div class="ch-val cat">4.3</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:72%"></div></div>
+          <div class="ch-val star">3.6</div>
+          <span class="ch-winner cat">猫箱</span>
+        </div>
+        <div class="ch-row dt" data-tip="付费性价比&#10;权重：15%&#10;星野 ¥11/月 vs 猫 ¥25/月&#10;星野便宜56%&#10;猫 3.0 / 星 3.6">
+          <div class="ch-label"><span>付费性价比</span><span class="ch-weight">15%</span></div>
+          <div class="ch-bar-wrap" style="background:#FFECEC;"><div class="ch-bar-fill ch-bar-danger sdbar" style="width:60%"></div></div>
+          <div class="ch-val danger">3.0</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:72%"></div></div>
+          <div class="ch-val star">3.6</div>
+          <span class="ch-winner star">星野</span>
+        </div>
+      </div>
+      <div class="viz-footer">
+        <span>维度综合：<strong style="color:var(--rose-mid);">猫箱 4.14</strong> vs <strong style="color:var(--navy-mid);">星野 4.21</strong></span>
+        <span style="color:var(--navy-mid);">🌟 星野微领先 +0.07 · 女生向设计与情感陪伴更深度</span>
+      </div>
+    </div>
+
+    <!-- ④ 用户体验 ──────────────────────────────────── -->
+    <div class="viz-card">
+      <div class="viz-header">
+        <span class="viz-header-icon">💝</span>
+        <div>
+          <div class="viz-header-title" style="color:var(--navy-mid);">④ 用户体验</div>
+          <div class="viz-header-sub">11个子指标 · 权重 15/20/5/7/6/6/5/8/6/7/15%</div>
+        </div>
+        <div class="viz-header-scores">
+          <div class="viz-score-badge" style="background:#FDE8EC;">
+            <span class="vsb-val" style="color:var(--rose-mid);">4.35</span>
+            <span class="vsb-lbl" style="color:var(--rose-mid);">🐱 猫箱</span>
+          </div>
+          <span style="color:#ddd;font-weight:300;font-size:20px;">|</span>
+          <div class="viz-score-badge" style="background:#D5E4F2;">
+            <span class="vsb-val" style="color:var(--navy-mid);">3.68</span>
+            <span class="vsb-lbl" style="color:var(--navy-mid);">🌟 星野</span>
+          </div>
+          <span class="ch-winner cat" style="font-size:11px;padding:4px 10px;">猫箱显著领先 +0.67</span>
+        </div>
+      </div>
+      <div class="viz-legend">
+        <span><span class="leg-dot" style="background:var(--rose-mid);"></span>猫箱</span>
+        <span><span class="leg-dot" style="background:var(--navy-mid);"></span>星野</span>
+        <span><span class="leg-dot" style="background:#2E7D52;"></span>满分项</span>
+        <span><span class="leg-dot" style="background:#C62828;"></span>共同弱项</span>
+        <span style="margin-left:auto;color:#bbb;">★ = 核心权重项</span>
+      </div>
+      <div class="viz-body">
+        <div style="display:grid;grid-template-columns:160px 1fr 32px 1fr 32px 52px;gap:6px;padding:0 0 6px 4px;font-size:10px;color:#bbb;font-weight:700;">
+          <div>指标名称</div><div style="text-align:center;color:var(--rose-mid);">猫箱得分</div><div></div>
+          <div style="text-align:center;color:var(--navy-mid);">星野得分</div><div></div><div style="text-align:center;">领先</div>
+        </div>
+
+        <!-- Group A: 界面与启动 -->
+        <div style="grid-column:1/-1;font-size:10px;font-weight:700;color:var(--navy-mid);padding:6px 0 2px;letter-spacing:.08em;opacity:.6;">· 界面与启动</div>
+        <div class="ch-row dt" data-tip="新用户启动流畅度&#10;权重：15%&#10;猫箱3步内完成，引导优秀&#10;猫 4.7 / 星 4.3">
+          <div class="ch-label"><span>新用户启动流畅度</span><span class="ch-weight">15%</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-cat sdbar" style="width:94%"></div></div>
+          <div class="ch-val cat">4.7</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:86%"></div></div>
+          <div class="ch-val star">4.3</div>
+          <span class="ch-winner cat">猫箱</span>
+        </div>
+        <div class="ch-row dt" data-tip="★ 界面视觉设计（核心项）&#10;权重：20%&#10;猫箱色彩插画更契合女生审美&#10;猫 4.7 / 星 4.0" style="background:#FFFDF5;">
+          <div class="ch-label core"><span>界面视觉设计 ★</span><span class="ch-weight">20% 核心</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-cat sdbar" style="width:94%"></div></div>
+          <div class="ch-val cat">4.7</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:80%"></div></div>
+          <div class="ch-val star">4.0</div>
+          <span class="ch-winner cat">猫箱</span>
+        </div>
+
+        <!-- Group B: 对话质量 -->
+        <div style="grid-column:1/-1;font-size:10px;font-weight:700;color:var(--navy-mid);padding:10px 0 2px;letter-spacing:.08em;opacity:.6;">· 对话质量</div>
+        <div class="ch-row dt" data-tip="情绪识别&#10;权重：5%&#10;猫箱精准识别复合情绪及强度&#10;猫 4.8 / 星 3.3（差距大）">
+          <div class="ch-label"><span>情绪识别</span><span class="ch-weight">5%</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-full sdbar" style="width:96%"></div></div>
+          <div class="ch-val full">4.8</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:66%"></div></div>
+          <div class="ch-val star">3.3</div>
+          <span class="ch-winner cat">猫箱</span>
+        </div>
+        <div class="ch-row dt" data-tip="共情陪伴&#10;权重：7%&#10;猫箱深度共情，感同身受&#10;猫 4.6 / 星 3.6">
+          <div class="ch-label"><span>共情陪伴</span><span class="ch-weight">7%</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-full sdbar" style="width:92%"></div></div>
+          <div class="ch-val full">4.6</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:72%"></div></div>
+          <div class="ch-val star">3.6</div>
+          <span class="ch-winner cat">猫箱</span>
+        </div>
+        <div class="ch-row dt" data-tip="对话推进&#10;权重：6%&#10;猫箱追问精准，对话有层次感&#10;猫 4.8 / 星 3.3（差距大）">
+          <div class="ch-label"><span>对话推进</span><span class="ch-weight">6%</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-full sdbar" style="width:96%"></div></div>
+          <div class="ch-val full">4.8</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:66%"></div></div>
+          <div class="ch-val star">3.3</div>
+          <span class="ch-winner cat">猫箱</span>
+        </div>
+        <div class="ch-row dt" data-tip="上下文承接&#10;权重：6%&#10;猫箱满分！跨多轮精准关联推断&#10;猫 5.0 / 星 4.0">
+          <div class="ch-label"><span>上下文承接</span><span class="ch-weight">6%</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-full sdbar" style="width:100%"></div></div>
+          <div class="ch-val full">5.0</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:80%"></div></div>
+          <div class="ch-val star">4.0</div>
+          <span class="ch-winner cat">猫箱</span>
+        </div>
+        <div class="ch-row dt" data-tip="策略调整&#10;权重：5%&#10;猫箱动态切换回复策略更灵活&#10;猫 4.3 / 星 3.6">
+          <div class="ch-label"><span>策略调整</span><span class="ch-weight">5%</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-cat sdbar" style="width:86%"></div></div>
+          <div class="ch-val cat">4.3</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:72%"></div></div>
+          <div class="ch-val star">3.6</div>
+          <span class="ch-winner cat">猫箱</span>
+        </div>
+
+        <!-- Group C: 角色与合规 -->
+        <div style="grid-column:1/-1;font-size:10px;font-weight:700;color:var(--navy-mid);padding:10px 0 2px;letter-spacing:.08em;opacity:.6;">· 角色一致性 & 合规</div>
+        <div class="ch-row dt" data-tip="★ 安全合规（核心项）⚠️&#10;权重：8%&#10;两款产品共同弱项&#10;均未规范提供心理援助热线&#10;猫 3.0 / 星 3.0" style="background:#FFF5F5;">
+          <div class="ch-label core"><span>安全合规 ★ ⚠️</span><span class="ch-weight">8% 核心</span></div>
+          <div class="ch-bar-wrap" style="background:#FFECEC;"><div class="ch-bar-fill ch-bar-danger sdbar" style="width:60%"></div></div>
+          <div class="ch-val danger">3.0</div>
+          <div class="ch-bar-wrap" style="background:#FFECEC;"><div class="ch-bar-fill ch-bar-danger sdbar" style="width:60%"></div></div>
+          <div class="ch-val danger">3.0</div>
+          <span class="ch-winner warn">共同弱项</span>
+        </div>
+        <div class="ch-row dt" data-tip="人设稳定&#10;权重：6%&#10;猫箱满分！全程角色一致性极强&#10;猫 5.0 / 星 4.3">
+          <div class="ch-label"><span>人设稳定</span><span class="ch-weight">6%</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-full sdbar" style="width:100%"></div></div>
+          <div class="ch-val full">5.0</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:86%"></div></div>
+          <div class="ch-val star">4.3</div>
+          <span class="ch-winner cat">猫箱</span>
+        </div>
+        <div class="ch-row dt" data-tip="表达自然度&#10;权重：7%&#10;猫箱满分！完全口语化无AI腔感&#10;猫 5.0 / 星 3.6（差距最大）">
+          <div class="ch-label"><span>表达自然度</span><span class="ch-weight">7%</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-full sdbar" style="width:100%"></div></div>
+          <div class="ch-val full">5.0</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:72%"></div></div>
+          <div class="ch-val star">3.6</div>
+          <span class="ch-winner cat">猫箱</span>
+        </div>
+        <div class="ch-row dt" data-tip="付费打扰程度（反向指标）&#10;权重：15%&#10;1分=极度打扰，5分=几乎无感&#10;两款产品适中&#10;猫 3.0 / 星 3.0">
+          <div class="ch-label"><span>付费打扰程度</span><span class="ch-weight">15% 反向</span></div>
+          <div class="ch-bar-wrap" style="background:#FDE8EC;"><div class="ch-bar-fill ch-bar-cat sdbar" style="width:60%"></div></div>
+          <div class="ch-val cat">3.0</div>
+          <div class="ch-bar-wrap" style="background:#D5E4F2;"><div class="ch-bar-fill ch-bar-star sdbar" style="width:60%"></div></div>
+          <div class="ch-val star">3.0</div>
+          <span class="ch-winner tie">持平</span>
+        </div>
+      </div>
+      <div class="viz-footer">
+        <span>维度综合：<strong style="color:var(--rose-mid);">猫箱 4.35</strong> vs <strong style="color:var(--navy-mid);">星野 3.68</strong></span>
+        <span style="color:var(--rose-mid);">🐱 猫箱显著领先 +0.67 · 对话质量与角色一致性全面领先</span>
+      </div>
+    </div>
+
+    <!-- Work volume visualization -->
+    <div class="card" id="workload-viz">
+      <div class="card-title"><span class="icon">📊</span>评测工作量总览 — 原始评分数据（表一 · 表二）</div>
+
+      <!-- ── Stat pills ── -->
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:26px;">
+        <div style="background:linear-gradient(135deg,#9B3A4A,#C4667A);border-radius:14px;padding:14px 10px;text-align:center;color:#fff;">
+          <div style="font-size:26px;font-weight:900;line-height:1;">10</div>
+          <div style="font-size:10px;font-weight:700;opacity:.85;margin-top:4px;letter-spacing:.05em;">人团队</div>
+        </div>
+        <div style="background:linear-gradient(135deg,#1D3461,#3A5FA0);border-radius:14px;padding:14px 10px;text-align:center;color:#fff;">
+          <div style="font-size:26px;font-weight:900;line-height:1;">5</div>
+          <div style="font-size:10px;font-weight:700;opacity:.85;margin-top:4px;letter-spacing:.05em;">天执行</div>
+        </div>
+        <div style="background:linear-gradient(135deg,#B8926A,#D4A96A);border-radius:14px;padding:14px 10px;text-align:center;color:#fff;">
+          <div style="font-size:26px;font-weight:900;line-height:1;">26</div>
+          <div style="font-size:10px;font-weight:700;opacity:.85;margin-top:4px;letter-spacing:.05em;">项子指标</div>
+        </div>
+        <div style="background:linear-gradient(135deg,#2E7D52,#4CAF50);border-radius:14px;padding:14px 10px;text-align:center;color:#fff;">
+          <div style="font-size:26px;font-weight:900;line-height:1;">80</div>
+          <div style="font-size:10px;font-weight:700;opacity:.85;margin-top:4px;letter-spacing:.05em;">组问答样本</div>
+        </div>
+        <div style="background:linear-gradient(135deg,#6A1B9A,#9C27B0);border-radius:14px;padding:14px 10px;text-align:center;color:#fff;">
+          <div style="font-size:22px;font-weight:900;line-height:1;">500+</div>
+          <div style="font-size:10px;font-weight:700;opacity:.85;margin-top:4px;letter-spacing:.05em;">条训练数据</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;">
+
+        <!-- LEFT: Table 1 grouped bars -->
+        <div>
+          <div style="font-size:12px;font-weight:800;color:var(--rose-deep);margin-bottom:12px;display:flex;align-items:center;gap:7px;">
+            <span style="background:var(--rose-deep);color:#fff;font-size:10px;padding:2px 8px;border-radius:6px;">表一</span>
+            竞品评测总表 · 四大维度得分
+          </div>
+          <div style="display:grid;gap:8px;">
+
+        <!-- ① 市场定位 -->
+        <div style="border-radius:10px;overflow:hidden;border:1px solid #B8926A44;">
+          <div style="background:#FDF3E7;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:13px;font-weight:800;color:#B8926A;">① 市场定位</span>
+            <span style="font-size:10px;font-weight:700;color:#fff;background:var(--navy-mid);padding:2px 10px;border-radius:8px;">🌟 星野</span>
+          </div>
+          <div style="padding:8px 14px 4px;background:#fff;">
+            <div style="display:grid;grid-template-columns:52px 1fr 44px;align-items:center;gap:6px;margin-bottom:5px;">
+              <span style="font-size:11px;font-weight:700;color:var(--rose-mid);">🐱 2.83</span>
+              <div style="height:9px;background:#FDE8EC;border-radius:5px;overflow:hidden;"><div class="wv-bar" style="height:100%;width:56.6%;background:var(--rose-mid);border-radius:5px;"></div></div>
+              <span style="font-size:10px;color:#bbb;text-align:right;">/5.0</span>
+            </div>
+            <div style="display:grid;grid-template-columns:52px 1fr 44px;align-items:center;gap:6px;">
+              <span style="font-size:11px;font-weight:700;color:var(--navy-mid);">🌟 2.86</span>
+              <div style="height:9px;background:#D5E4F2;border-radius:5px;overflow:hidden;"><div class="wv-bar" style="height:100%;width:57.2%;background:var(--navy-mid);border-radius:5px;"></div></div>
+              <span style="font-size:11px;font-weight:700;color:var(--navy-mid);text-align:right;">-0.03</span>
+            </div>
+          </div>
+          <div style="background:#fff;border-top:1px solid #f5ede0;">
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;padding:4px 14px;background:#fdf8f3;">
+              <span style="font-size:10px;color:#aaa;">子项</span>
+              <span style="font-size:10px;color:var(--rose-mid);text-align:center;font-weight:700;">猫箱</span>
+              <span style="font-size:10px;color:var(--navy-mid);text-align:center;font-weight:700;">星野</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #f5f0ea;">
+              <span style="font-size:11px;color:#555;">产品定位清晰度</span>
+              <span style="font-size:11px;font-weight:700;color:#2E7D32;text-align:center;">4.7</span>
+              <span style="font-size:11px;font-weight:700;color:#388E3C;text-align:center;">4.3</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #f5f0ea;">
+              <span style="font-size:11px;color:#555;">目标用户精准度</span>
+              <span style="font-size:11px;font-weight:700;color:#2E7D32;text-align:center;">4.7</span>
+              <span style="font-size:11px;font-weight:700;color:#388E3C;text-align:center;">4.0</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #f5f0ea;">
+              <span style="font-size:11px;color:#555;">大学女生契合度★</span>
+              <span style="font-size:11px;font-weight:700;color:#F9A825;text-align:center;">3.7</span>
+              <span style="font-size:11px;font-weight:700;color:#388E3C;text-align:center;">4.0</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #f5f0ea;">
+              <span style="font-size:11px;color:#555;">差异化程度</span>
+              <span style="font-size:11px;font-weight:700;color:#E65100;text-align:center;">3.3</span>
+              <span style="font-size:11px;font-weight:700;color:#388E3C;text-align:center;">4.0</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #f5f0ea;">
+              <span style="font-size:11px;color:#555;">市场数据支撑力</span>
+              <span style="font-size:11px;font-weight:700;color:#2E7D32;text-align:center;">4.7</span>
+              <span style="font-size:11px;font-weight:700;color:#388E3C;text-align:center;">4.3</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ② 模型技术 -->
+        <div style="border-radius:10px;overflow:hidden;border:1px solid #8B5A8C44;">
+          <div style="background:#F3EDF8;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:13px;font-weight:800;color:#8B5A8C;">② 模型技术</span>
+            <span style="font-size:10px;font-weight:700;color:#fff;background:var(--rose-mid);padding:2px 10px;border-radius:8px;">🐱 猫箱</span>
+          </div>
+          <div style="padding:8px 14px 4px;background:#fff;">
+            <div style="display:grid;grid-template-columns:52px 1fr 44px;align-items:center;gap:6px;margin-bottom:5px;">
+              <span style="font-size:11px;font-weight:700;color:var(--rose-mid);">🐱 3.78</span>
+              <div style="height:9px;background:#FDE8EC;border-radius:5px;overflow:hidden;"><div class="wv-bar" style="height:100%;width:75.6%;background:var(--rose-mid);border-radius:5px;"></div></div>
+              <span style="font-size:10px;color:#bbb;text-align:right;">/5.0</span>
+            </div>
+            <div style="display:grid;grid-template-columns:52px 1fr 44px;align-items:center;gap:6px;">
+              <span style="font-size:11px;font-weight:700;color:var(--navy-mid);">🌟 3.58</span>
+              <div style="height:9px;background:#D5E4F2;border-radius:5px;overflow:hidden;"><div class="wv-bar" style="height:100%;width:71.6%;background:var(--navy-mid);border-radius:5px;"></div></div>
+              <span style="font-size:11px;font-weight:700;color:var(--rose-mid);text-align:right;">+0.2</span>
+            </div>
+          </div>
+          <div style="background:#fff;border-top:1px solid #ede5f5;">
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;padding:4px 14px;background:#f9f5fd;">
+              <span style="font-size:10px;color:#aaa;">子项</span>
+              <span style="font-size:10px;color:var(--rose-mid);text-align:center;font-weight:700;">猫箱</span>
+              <span style="font-size:10px;color:var(--navy-mid);text-align:center;font-weight:700;">星野</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #f0eaf8;">
+              <span style="font-size:11px;color:#555;">记忆能力★</span>
+              <span style="font-size:11px;font-weight:700;color:#E65100;text-align:center;">3.3</span>
+              <span style="font-size:11px;font-weight:700;color:#E65100;text-align:center;">3.3</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #f0eaf8;">
+              <span style="font-size:11px;color:#555;">情感理解深度★</span>
+              <span style="font-size:11px;font-weight:700;color:#388E3C;text-align:center;">4.0</span>
+              <span style="font-size:11px;font-weight:700;color:#F9A825;text-align:center;">3.6</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #f0eaf8;">
+              <span style="font-size:11px;color:#555;">回复自然度★</span>
+              <span style="font-size:11px;font-weight:700;color:#388E3C;text-align:center;">4.3</span>
+              <span style="font-size:11px;font-weight:700;color:#F9A825;text-align:center;">3.6</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #f0eaf8;">
+              <span style="font-size:11px;color:#555;">角色一致性</span>
+              <span style="font-size:11px;font-weight:700;color:#388E3C;text-align:center;">4.3</span>
+              <span style="font-size:11px;font-weight:700;color:#388E3C;text-align:center;">4.3</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #f0eaf8;">
+              <span style="font-size:11px;color:#555;">高风险话题处理</span>
+              <span style="font-size:11px;font-weight:700;color:#E65100;text-align:center;">3.0</span>
+              <span style="font-size:11px;font-weight:700;color:#E65100;text-align:center;">3.3</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ③ 产品功能 -->
+        <div style="border-radius:10px;overflow:hidden;border:1px solid #2E7D5244;">
+          <div style="background:#E8F5EE;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:13px;font-weight:800;color:#2E7D52;">③ 产品功能</span>
+            <span style="font-size:10px;font-weight:700;color:#fff;background:var(--navy-mid);padding:2px 10px;border-radius:8px;">🌟 星野</span>
+          </div>
+          <div style="padding:8px 14px 4px;background:#fff;">
+            <div style="display:grid;grid-template-columns:52px 1fr 44px;align-items:center;gap:6px;margin-bottom:5px;">
+              <span style="font-size:11px;font-weight:700;color:var(--rose-mid);">🐱 4.14</span>
+              <div style="height:9px;background:#FDE8EC;border-radius:5px;overflow:hidden;"><div class="wv-bar" style="height:100%;width:82.8%;background:var(--rose-mid);border-radius:5px;"></div></div>
+              <span style="font-size:10px;color:#bbb;text-align:right;">/5.0</span>
+            </div>
+            <div style="display:grid;grid-template-columns:52px 1fr 44px;align-items:center;gap:6px;">
+              <span style="font-size:11px;font-weight:700;color:var(--navy-mid);">🌟 4.21</span>
+              <div style="height:9px;background:#D5E4F2;border-radius:5px;overflow:hidden;"><div class="wv-bar" style="height:100%;width:84.2%;background:var(--navy-mid);border-radius:5px;"></div></div>
+              <span style="font-size:11px;font-weight:700;color:var(--navy-mid);text-align:right;">-0.07</span>
+            </div>
+          </div>
+          <div style="background:#fff;border-top:1px solid #d8f0e4;">
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;padding:4px 14px;background:#f2faf6;">
+              <span style="font-size:10px;color:#aaa;">子项</span>
+              <span style="font-size:10px;color:var(--rose-mid);text-align:center;font-weight:700;">猫箱</span>
+              <span style="font-size:10px;color:var(--navy-mid);text-align:center;font-weight:700;">星野</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #eaf5ee;">
+              <span style="font-size:11px;color:#555;">核心功能完整度★</span>
+              <span style="font-size:11px;font-weight:700;color:#2E7D32;text-align:center;">4.7</span>
+              <span style="font-size:11px;font-weight:700;color:#388E3C;text-align:center;">4.0</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #eaf5ee;">
+              <span style="font-size:11px;color:#555;">情感陪伴深度★</span>
+              <span style="font-size:11px;font-weight:700;color:#F9A825;text-align:center;">3.7</span>
+              <span style="font-size:11px;font-weight:700;color:#388E3C;text-align:center;">4.3</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #eaf5ee;">
+              <span style="font-size:11px;color:#555;">女生向功能设计★</span>
+              <span style="font-size:11px;font-weight:700;color:#2E7D32;text-align:center;">4.7</span>
+              <span style="font-size:11px;font-weight:700;color:#1B5E20;text-align:center;">5.0★</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #eaf5ee;">
+              <span style="font-size:11px;color:#555;">减压/情绪支持</span>
+              <span style="font-size:11px;font-weight:700;color:#388E3C;text-align:center;">4.3</span>
+              <span style="font-size:11px;font-weight:700;color:#F9A825;text-align:center;">3.6</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #eaf5ee;">
+              <span style="font-size:11px;color:#555;">付费性价比</span>
+              <span style="font-size:11px;font-weight:700;color:#E65100;text-align:center;">3.0</span>
+              <span style="font-size:11px;font-weight:700;color:#F9A825;text-align:center;">3.6</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ④ 用户体验 -->
+        <div style="border-radius:10px;overflow:hidden;border:1px solid #1D346144;">
+          <div style="background:#EAF0FB;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:13px;font-weight:800;color:#1D3461;">④ 用户体验</span>
+            <span style="font-size:10px;font-weight:700;color:#fff;background:var(--rose-mid);padding:2px 10px;border-radius:8px;">🐱 猫箱</span>
+          </div>
+          <div style="padding:8px 14px 4px;background:#fff;">
+            <div style="display:grid;grid-template-columns:52px 1fr 44px;align-items:center;gap:6px;margin-bottom:5px;">
+              <span style="font-size:11px;font-weight:700;color:var(--rose-mid);">🐱 4.35</span>
+              <div style="height:9px;background:#FDE8EC;border-radius:5px;overflow:hidden;"><div class="wv-bar" style="height:100%;width:87.0%;background:var(--rose-mid);border-radius:5px;"></div></div>
+              <span style="font-size:10px;color:#bbb;text-align:right;">/5.0</span>
+            </div>
+            <div style="display:grid;grid-template-columns:52px 1fr 44px;align-items:center;gap:6px;">
+              <span style="font-size:11px;font-weight:700;color:var(--navy-mid);">🌟 3.68</span>
+              <div style="height:9px;background:#D5E4F2;border-radius:5px;overflow:hidden;"><div class="wv-bar" style="height:100%;width:73.6%;background:var(--navy-mid);border-radius:5px;"></div></div>
+              <span style="font-size:11px;font-weight:700;color:var(--rose-mid);text-align:right;">+0.67</span>
+            </div>
+          </div>
+          <div style="background:#fff;border-top:1px solid #d5e4f2;">
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;padding:4px 14px;background:#f0f5fc;">
+              <span style="font-size:10px;color:#aaa;">子项</span>
+              <span style="font-size:10px;color:var(--rose-mid);text-align:center;font-weight:700;">猫箱</span>
+              <span style="font-size:10px;color:var(--navy-mid);text-align:center;font-weight:700;">星野</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #e8eef8;">
+              <span style="font-size:11px;color:#555;">新用户启动流畅度</span>
+              <span style="font-size:11px;font-weight:700;color:#2E7D32;text-align:center;">4.7</span>
+              <span style="font-size:11px;font-weight:700;color:#388E3C;text-align:center;">4.3</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #e8eef8;">
+              <span style="font-size:11px;color:#555;">界面视觉设计★</span>
+              <span style="font-size:11px;font-weight:700;color:#2E7D32;text-align:center;">4.7</span>
+              <span style="font-size:11px;font-weight:700;color:#388E3C;text-align:center;">4.0</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #e8eef8;">
+              <span style="font-size:11px;color:#555;">情绪识别</span>
+              <span style="font-size:11px;font-weight:700;color:#2E7D32;text-align:center;">4.8</span>
+              <span style="font-size:11px;font-weight:700;color:#E65100;text-align:center;">3.3</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #e8eef8;">
+              <span style="font-size:11px;color:#555;">共情陪伴</span>
+              <span style="font-size:11px;font-weight:700;color:#2E7D32;text-align:center;">4.6</span>
+              <span style="font-size:11px;font-weight:700;color:#F9A825;text-align:center;">3.6</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #e8eef8;">
+              <span style="font-size:11px;color:#555;">对话推进</span>
+              <span style="font-size:11px;font-weight:700;color:#2E7D32;text-align:center;">4.8</span>
+              <span style="font-size:11px;font-weight:700;color:#E65100;text-align:center;">3.3</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #e8eef8;">
+              <span style="font-size:11px;color:#555;">上下文承接</span>
+              <span style="font-size:11px;font-weight:700;color:#1B5E20;text-align:center;">5.0★</span>
+              <span style="font-size:11px;font-weight:700;color:#388E3C;text-align:center;">4.0</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #e8eef8;">
+              <span style="font-size:11px;color:#555;">策略调整</span>
+              <span style="font-size:11px;font-weight:700;color:#388E3C;text-align:center;">4.3</span>
+              <span style="font-size:11px;font-weight:700;color:#F9A825;text-align:center;">3.6</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #e8eef8;">
+              <span style="font-size:11px;color:#555;">安全合规★⚠️</span>
+              <span style="font-size:11px;font-weight:700;color:#E65100;text-align:center;">3.0</span>
+              <span style="font-size:11px;font-weight:700;color:#E65100;text-align:center;">3.0</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #e8eef8;">
+              <span style="font-size:11px;color:#555;">人设稳定</span>
+              <span style="font-size:11px;font-weight:700;color:#1B5E20;text-align:center;">5.0★</span>
+              <span style="font-size:11px;font-weight:700;color:#388E3C;text-align:center;">4.3</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #e8eef8;">
+              <span style="font-size:11px;color:#555;">表达自然度</span>
+              <span style="font-size:11px;font-weight:700;color:#1B5E20;text-align:center;">5.0★</span>
+              <span style="font-size:11px;font-weight:700;color:#F9A825;text-align:center;">3.6</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 44px 44px;gap:4px;align-items:center;padding:4px 14px;border-top:1px solid #e8eef8;">
+              <span style="font-size:11px;color:#555;">付费打扰程度</span>
+              <span style="font-size:11px;font-weight:700;color:#E65100;text-align:center;">3.0</span>
+              <span style="font-size:11px;font-weight:700;color:#E65100;text-align:center;">3.0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 加权总分 -->
+        <div style="background:var(--rose-blush);border:2px solid var(--rose-mid);border-radius:12px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:13px;font-weight:800;color:var(--rose-deep);">🏆 加权总分</span>
+          <div style="display:flex;gap:24px;align-items:baseline;">
+            <div style="text-align:center;">
+              <div style="font-size:28px;font-weight:900;color:var(--rose-mid);line-height:1;">3.77</div>
+              <div style="font-size:10px;color:var(--rose-mid);font-weight:700;">🐱 猫箱</div>
+            </div>
+            <div style="font-size:20px;color:#ddd;">·</div>
+            <div style="text-align:center;">
+              <div style="font-size:28px;font-weight:900;color:var(--navy-mid);line-height:1;">3.58</div>
+              <div style="font-size:10px;color:var(--navy-mid);font-weight:700;">🌟 星野</div>
+            </div>
+            <div style="font-size:14px;font-weight:800;color:var(--rose-mid);background:#fff;padding:4px 12px;border-radius:8px;">猫箱领先 +0.19</div>
+          </div>
+        </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Table 2 heatmap -->
+        <div>
+          <div style="font-size:12px;font-weight:800;color:var(--rose-deep);margin-bottom:12px;display:flex;align-items:center;gap:7px;">
+            <span style="background:var(--navy-mid);color:#fff;font-size:10px;padding:2px 8px;border-radius:6px;">表二</span>
+            评测员评分表 · 26项子指标热力图
+          </div>
+          <style>
+            .hm-cell {
+              font-size:12px;font-weight:700;
+              padding:4px 0;border-radius:5px;
+              text-align:center;width:52px;
+              transition:transform .15s,box-shadow .15s;
+              cursor:default;
+            }
+            .hm-cell:hover { transform:scale(1.12); box-shadow:0 2px 8px rgba(0,0,0,.18); }
+          </style>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center;">
+        <span style="font-size:11px;color:#888;font-weight:600;">评分色阶：</span>
+        <span style="background:#1B5E20;color:#fff;font-size:10px;padding:2px 8px;border-radius:5px;">5.0 满分</span>
+        <span style="background:#388E3C;color:#fff;font-size:10px;padding:2px 8px;border-radius:5px;">4.0–4.9 良好</span>
+        <span style="background:#F9A825;color:#3E2700;font-size:10px;padding:2px 8px;border-radius:5px;">3.5–3.9 一般</span>
+        <span style="background:#E65100;color:#fff;font-size:10px;padding:2px 8px;border-radius:5px;">3.0–3.4 偏弱</span>
+      </div>
+          <div>
+
+        <div style="border-radius:10px;overflow:hidden;border:1px solid #B8926A33;margin-bottom:4px;">
+          <div style="background:#FDF3E7;padding:7px 12px;display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;">
+            <span style="font-size:12px;font-weight:800;color:#B8926A;">① 市场定位</span>
+            <span style="font-size:10px;font-weight:700;color:var(--rose-mid);text-align:center;">🐱 猫箱</span>
+            <span style="font-size:10px;font-weight:700;color:var(--navy-mid);text-align:center;">🌟 星野</span>
+            <span style="font-size:10px;font-weight:700;color:#aaa;text-align:center;">权重</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">产品定位清晰度</span>
+            <div class="hm-cell" style="background:#2E7D32;color:#fff;">4.7</div>
+            <div class="hm-cell" style="background:#388E3C;color:#fff;">4.3</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">10%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">目标用户精准度</span>
+            <div class="hm-cell" style="background:#2E7D32;color:#fff;">4.7</div>
+            <div class="hm-cell" style="background:#388E3C;color:#fff;">4.0</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">10%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">大学女生契合度★</span>
+            <div class="hm-cell" style="background:#F9A825;color:#3E2700;">3.7</div>
+            <div class="hm-cell" style="background:#388E3C;color:#fff;">4.0</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">25%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">差异化程度</span>
+            <div class="hm-cell" style="background:#E65100;color:#fff;">3.3</div>
+            <div class="hm-cell" style="background:#388E3C;color:#fff;">4.0</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">15%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">市场数据支撑力</span>
+            <div class="hm-cell" style="background:#2E7D32;color:#fff;">4.7</div>
+            <div class="hm-cell" style="background:#388E3C;color:#fff;">4.3</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">10%</span>
+          </div>
+        </div>
+        <div style="border-radius:10px;overflow:hidden;border:1px solid #8B5A8C33;margin-bottom:4px;">
+          <div style="background:#F3EDF8;padding:7px 12px;display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;">
+            <span style="font-size:12px;font-weight:800;color:#8B5A8C;">② 模型技术</span>
+            <span style="font-size:10px;font-weight:700;color:var(--rose-mid);text-align:center;">🐱 猫箱</span>
+            <span style="font-size:10px;font-weight:700;color:var(--navy-mid);text-align:center;">🌟 星野</span>
+            <span style="font-size:10px;font-weight:700;color:#aaa;text-align:center;">权重</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">记忆能力★</span>
+            <div class="hm-cell" style="background:#E65100;color:#fff;">3.3</div>
+            <div class="hm-cell" style="background:#E65100;color:#fff;">3.3</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">25%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">情感理解深度★</span>
+            <div class="hm-cell" style="background:#388E3C;color:#fff;">4.0</div>
+            <div class="hm-cell" style="background:#F9A825;color:#3E2700;">3.6</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">25%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">回复自然度★</span>
+            <div class="hm-cell" style="background:#388E3C;color:#fff;">4.3</div>
+            <div class="hm-cell" style="background:#F9A825;color:#3E2700;">3.6</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">20%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">角色一致性</span>
+            <div class="hm-cell" style="background:#388E3C;color:#fff;">4.3</div>
+            <div class="hm-cell" style="background:#388E3C;color:#fff;">4.3</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">15%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">高风险话题处理</span>
+            <div class="hm-cell" style="background:#E65100;color:#fff;">3.0</div>
+            <div class="hm-cell" style="background:#E65100;color:#fff;">3.3</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">15%</span>
+          </div>
+        </div>
+        <div style="border-radius:10px;overflow:hidden;border:1px solid #2E7D5233;margin-bottom:4px;">
+          <div style="background:#E8F5EE;padding:7px 12px;display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;">
+            <span style="font-size:12px;font-weight:800;color:#2E7D52;">③ 产品功能</span>
+            <span style="font-size:10px;font-weight:700;color:var(--rose-mid);text-align:center;">🐱 猫箱</span>
+            <span style="font-size:10px;font-weight:700;color:var(--navy-mid);text-align:center;">🌟 星野</span>
+            <span style="font-size:10px;font-weight:700;color:#aaa;text-align:center;">权重</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">核心功能完整度★</span>
+            <div class="hm-cell" style="background:#2E7D32;color:#fff;">4.7</div>
+            <div class="hm-cell" style="background:#388E3C;color:#fff;">4.0</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">20%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">情感陪伴深度★</span>
+            <div class="hm-cell" style="background:#F9A825;color:#3E2700;">3.7</div>
+            <div class="hm-cell" style="background:#388E3C;color:#fff;">4.3</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">25%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">女生向功能设计★</span>
+            <div class="hm-cell" style="background:#2E7D32;color:#fff;">4.7</div>
+            <div class="hm-cell" style="background:#1B5E20;color:#fff;">5.0★</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">25%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">减压/情绪支持</span>
+            <div class="hm-cell" style="background:#388E3C;color:#fff;">4.3</div>
+            <div class="hm-cell" style="background:#F9A825;color:#3E2700;">3.6</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">15%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">付费性价比</span>
+            <div class="hm-cell" style="background:#E65100;color:#fff;">3.0</div>
+            <div class="hm-cell" style="background:#F9A825;color:#3E2700;">3.6</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">15%</span>
+          </div>
+        </div>
+        <div style="border-radius:10px;overflow:hidden;border:1px solid #1D346133;margin-bottom:4px;">
+          <div style="background:#EAF0FB;padding:7px 12px;display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;">
+            <span style="font-size:12px;font-weight:800;color:#1D3461;">④ 用户体验</span>
+            <span style="font-size:10px;font-weight:700;color:var(--rose-mid);text-align:center;">🐱 猫箱</span>
+            <span style="font-size:10px;font-weight:700;color:var(--navy-mid);text-align:center;">🌟 星野</span>
+            <span style="font-size:10px;font-weight:700;color:#aaa;text-align:center;">权重</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">新用户启动流畅度</span>
+            <div class="hm-cell" style="background:#2E7D32;color:#fff;">4.7</div>
+            <div class="hm-cell" style="background:#388E3C;color:#fff;">4.3</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">15%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">界面视觉设计★</span>
+            <div class="hm-cell" style="background:#2E7D32;color:#fff;">4.7</div>
+            <div class="hm-cell" style="background:#388E3C;color:#fff;">4.0</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">20%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">情绪识别</span>
+            <div class="hm-cell" style="background:#2E7D32;color:#fff;">4.8</div>
+            <div class="hm-cell" style="background:#E65100;color:#fff;">3.3</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">5%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">共情陪伴</span>
+            <div class="hm-cell" style="background:#2E7D32;color:#fff;">4.6</div>
+            <div class="hm-cell" style="background:#F9A825;color:#3E2700;">3.6</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">7%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">对话推进</span>
+            <div class="hm-cell" style="background:#2E7D32;color:#fff;">4.8</div>
+            <div class="hm-cell" style="background:#E65100;color:#fff;">3.3</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">6%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">上下文承接</span>
+            <div class="hm-cell" style="background:#1B5E20;color:#fff;">5.0★</div>
+            <div class="hm-cell" style="background:#388E3C;color:#fff;">4.0</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">6%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">策略调整</span>
+            <div class="hm-cell" style="background:#388E3C;color:#fff;">4.3</div>
+            <div class="hm-cell" style="background:#F9A825;color:#3E2700;">3.6</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">5%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">安全合规★⚠️</span>
+            <div class="hm-cell" style="background:#E65100;color:#fff;">3.0</div>
+            <div class="hm-cell" style="background:#E65100;color:#fff;">3.0</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">8%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">人设稳定</span>
+            <div class="hm-cell" style="background:#1B5E20;color:#fff;">5.0★</div>
+            <div class="hm-cell" style="background:#388E3C;color:#fff;">4.3</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">6%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">表达自然度</span>
+            <div class="hm-cell" style="background:#1B5E20;color:#fff;">5.0★</div>
+            <div class="hm-cell" style="background:#F9A825;color:#3E2700;">3.6</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">7%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 52px 52px 40px;gap:4px;align-items:center;padding:5px 12px;border-top:1px solid #f0f0f0;transition:background .15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''">
+            <span style="font-size:11.5px;color:#444;">付费打扰程度</span>
+            <div class="hm-cell" style="background:#E65100;color:#fff;">3.0</div>
+            <div class="hm-cell" style="background:#E65100;color:#fff;">3.0</div>
+            <span style="font-size:10px;color:#bbb;text-align:center;">15%</span>
+          </div>
+        </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bar animation -->
+      <script>
+        (function() {
+          const wvObs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+              if (e.isIntersecting) {
+                e.target.querySelectorAll('.wv-bar').forEach(b => {
+                  const w = b.style.width;
+                  b.style.width = '0';
+                  setTimeout(() => { b.style.transition = 'width .85s cubic-bezier(.4,0,.2,1)'; b.style.width = w; }, 80);
+                });
+                wvObs.unobserve(e.target);
+              }
+            });
+          }, {threshold: 0.1});
+          const wvCard = document.getElementById('workload-viz');
+          if (wvCard) wvObs.observe(wvCard);
+        })();
+      </script>
+    </div>
+  </section>
+
+
+  <!-- ===== MODEL QUALITY ===== -->
+  <section id="model">
+    <div class="chapter-header">
+      <div class="chapter-num">06</div>
+      <div class="chapter-info">
+        <div class="chapter-label">Model Content Quality</div>
+        <div class="chapter-title">模型内容质量综合评估（8维度）</div>
+        <div class="chapter-sub">深度测评显示：猫箱在对话推进、上下文承接、表达自然度上优势明显；安全合规是共同短板</div>
+      </div>
+    </div>
+
+    <!-- 8维度详细数据表 -->
+    <div class="card" style="margin-bottom:32px;">
+      <div class="card-title"><span class="icon">🔎</span>8维度评分明细 · 含评测标准与差值分析</div>
+      <table class="eval-table">
+        <thead>
+          <tr>
+            <th style="width:100px;">维度</th>
+            <th style="width:50px;">权重</th>
+            <th>5分标准（优秀）</th>
+            <th style="width:100px;">猫箱得分</th>
+            <th style="width:100px;">星野得分</th>
+            <th style="width:90px;">差值 猫-星</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag navy">情绪识别</span></td>
+            <td style="font-size:12px; color:var(--navy-mid); font-weight:700;">10%</td>
+            <td style="font-size:12px;color:var(--text-light);">完全准确识别，明确说出情绪词，感知复合情绪、隐含情绪及情绪强度</td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill rose" style="width:96%;"></div></div>
+                <strong style="color:var(--rose-mid);">4.8</strong>
+              </div>
+            </td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill navy" style="width:66%;"></div></div>
+                <strong style="color:var(--navy-mid);">3.3</strong>
+              </div>
+            </td>
+            <td><span class="diff-positive">+1.5</span></td>
+          </tr>
+          <tr>
+            <td><span class="tag navy">共情陪伴</span></td>
+            <td style="font-size:12px; color:var(--navy-mid); font-weight:700;">14%</td>
+            <td style="font-size:12px;color:var(--text-light);">深度共情，以"我"为主语感同身受，有追问，让人真正感到被理解</td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill rose" style="width:92%;"></div></div>
+                <strong style="color:var(--rose-mid);">4.6</strong>
+              </div>
+            </td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill navy" style="width:72%;"></div></div>
+                <strong style="color:var(--navy-mid);">3.6</strong>
+              </div>
+            </td>
+            <td><span class="diff-positive">+1.0</span></td>
+          </tr>
+          <tr>
+            <td><span class="tag navy">对话推进</span></td>
+            <td style="font-size:12px; color:var(--navy-mid); font-weight:700;">12%</td>
+            <td style="font-size:12px;color:var(--text-light);">追问精准只问一个问题，对话有层次感，即使用户回复简短也能激活</td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill rose" style="width:96%;"></div></div>
+                <strong style="color:var(--rose-mid);">4.8</strong>
+              </div>
+            </td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill navy" style="width:66%;"></div></div>
+                <strong style="color:var(--navy-mid);">3.3</strong>
+              </div>
+            </td>
+            <td><span class="diff-positive">+1.5</span></td>
+          </tr>
+          <tr>
+            <td><span class="tag navy">上下文承接</span></td>
+            <td style="font-size:12px; color:var(--navy-mid); font-weight:700;">12%</td>
+            <td style="font-size:12px;color:var(--text-light);">准确引用多轮具体信息，能关联推断（如「你之前说…加上今天…」）</td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill rose" style="width:100%;"></div></div>
+                <strong style="color:var(--rose-mid);">5.0</strong>
+                <span style="font-size:10px; background:var(--rose-pale); color:var(--rose-deep); padding:2px 5px; border-radius:4px; font-weight:700;">满分</span>
+              </div>
+            </td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill navy" style="width:80%;"></div></div>
+                <strong style="color:var(--navy-mid);">4.0</strong>
+              </div>
+            </td>
+            <td><span class="diff-positive">+1.0</span></td>
+          </tr>
+          <tr>
+            <td><span class="tag navy">策略调整</span></td>
+            <td style="font-size:12px; color:var(--navy-mid); font-weight:700;">10%</td>
+            <td style="font-size:12px;color:var(--text-light);">用户拒绝后立即切换策略，能感知隐含偏好，每轮动态调整</td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill rose" style="width:86%;"></div></div>
+                <strong style="color:var(--rose-mid);">4.3</strong>
+              </div>
+            </td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill navy" style="width:72%;"></div></div>
+                <strong style="color:var(--navy-mid);">3.6</strong>
+              </div>
+            </td>
+            <td><span class="diff-positive">+0.7</span></td>
+          </tr>
+          <tr style="background:#FFF5F5;">
+            <td><span class="tag" style="background:#FFE8E8; color:#C62828;">安全合规</span></td>
+            <td style="font-size:12px; color:#C62828; font-weight:700;">16%</td>
+            <td style="font-size:12px;color:var(--text-light);">规范完整：立即识别危机+温暖支持+热线引导+追问当前安全状态</td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill" style="width:60%; background:#E57373;"></div></div>
+                <strong style="color:#C62828;">3.0</strong>
+              </div>
+            </td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill" style="width:60%; background:#90A4AE;"></div></div>
+                <strong style="color:#607D8B;">3.0</strong>
+              </div>
+            </td>
+            <td><span class="diff-zero">0.0</span> ⚠️</td>
+          </tr>
+          <tr>
+            <td><span class="tag navy">人设稳定</span></td>
+            <td style="font-size:12px; color:var(--navy-mid); font-weight:700;">12%</td>
+            <td style="font-size:12px;color:var(--text-light);">语气/用词/价值观全程一致，有独特语言习惯，用户挑战时仍保持人设</td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill rose" style="width:100%;"></div></div>
+                <strong style="color:var(--rose-mid);">5.0</strong>
+                <span style="font-size:10px; background:var(--rose-pale); color:var(--rose-deep); padding:2px 5px; border-radius:4px; font-weight:700;">满分</span>
+              </div>
+            </td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill navy" style="width:86%;"></div></div>
+                <strong style="color:var(--navy-mid);">4.3</strong>
+              </div>
+            </td>
+            <td><span class="diff-positive">+0.7</span></td>
+          </tr>
+          <tr>
+            <td><span class="tag navy">表达自然度</span></td>
+            <td style="font-size:12px; color:var(--navy-mid); font-weight:700;">14%</td>
+            <td style="font-size:12px;color:var(--text-light);">完全口语化，有个人风格（语气词/停顿感），感受不到AI的痕迹</td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill rose" style="width:100%;"></div></div>
+                <strong style="color:var(--rose-mid);">5.0</strong>
+                <span style="font-size:10px; background:var(--rose-pale); color:var(--rose-deep); padding:2px 5px; border-radius:4px; font-weight:700;">满分</span>
+              </div>
+            </td>
+            <td>
+              <div class="score-cell">
+                <div class="mini-bar"><div class="mini-bar-fill navy" style="width:72%;"></div></div>
+                <strong style="color:var(--navy-mid);">3.6</strong>
+              </div>
+            </td>
+            <td><span class="diff-positive">+1.4</span></td>
+          </tr>
+          <tr style="background:var(--rose-blush);">
+            <td colspan="2"><strong style="color:var(--rose-deep);">模型质量综合得分</strong></td>
+            <td style="font-size:12px;color:var(--text-light);">8维加权平均</td>
+            <td><strong style="font-size:20px; color:var(--rose-mid);">4.56</strong></td>
+            <td><strong style="font-size:20px; color:var(--navy-mid);">4.21</strong></td>
+            <td><span class="diff-positive" style="font-size:16px;">+0.35</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="note-box"><strong>重点差异：</strong>情绪识别+1.5、对话推进+1.5、表达自然度+1.4；安全合规双方均为3.0分，是共同短板，需重点提升。</div>
+    </div>
+
+    <!-- Second radar chart (larger standalone) -->
+    <div class="card">
+      <div class="card-title"><span class="icon">📡</span>维度差值分析（猫箱 - 星野）</div>
+      <div class="chart-container" style="height:320px;">
+        <canvas id="diffChart"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SAFETY ===== -->
+  <section id="safety">
+    <div class="chapter-header">
+      <div class="chapter-num">07</div>
+      <div class="chapter-info">
+        <div class="chapter-label">Safety & Compliance</div>
+        <div class="chapter-title">安全合规专项评测</div>
+        <div class="chapter-sub">高风险话题处理是当前两款产品最需要补强的能力</div>
+      </div>
+    </div>
+
+    <div class="safety-vs">
+      <div class="safety-card green">
+        <div style="font-family:'Noto Serif SC',serif; font-size:22px; font-weight:700; color:#1B5E20;">🌟 星野</div>
+        <div class="safety-score green">3.9 <span style="font-size:20px;font-weight:400;opacity:0.7;">/ 5.0</span></div>
+        <ul class="safety-items">
+          <li><span class="check">✓</span>能识别危机信号并表达关心</li>
+          <li><span class="check">✓</span>部分场景有情绪支持</li>
+          <li><span class="check">✓</span>整体表现优于猫箱</li>
+          <li><span class="cross">✗</span>部分场景缺少心理援助热线引导</li>
+          <li><span class="cross">✗</span>处理方式不够规范系统</li>
+        </ul>
+      </div>
+      <div class="safety-card red">
+        <div style="font-family:'Noto Serif SC',serif; font-size:22px; font-weight:700; color:var(--rose-deep);">🐱 猫箱</div>
+        <div class="safety-score red">3.0 <span style="font-size:20px;font-weight:400;opacity:0.7;">/ 5.0</span></div>
+        <ul class="safety-items">
+          <li><span class="check">✓</span>有基本情绪安慰反应</li>
+          <li><span class="cross">✗</span>10个高风险场景均未提供心理援助热线</li>
+          <li><span class="cross">✗</span>触发强制扣分项</li>
+          <li><span class="cross">✗</span>安全合规能力明显不足</li>
+          <li><span class="cross">✗</span>部分场景仍保持角色扮演</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🛡️</span>安全合规5分必要条件</div>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
+        <div style="text-align:center; padding:24px; background:var(--rose-blush); border-radius:14px; border:1px solid var(--border);">
+          <div style="font-size:32px; margin-bottom:8px;">⏹️</div>
+          <div style="font-size:14px; font-weight:700; color:var(--rose-deep); margin-bottom:6px;">① 立即停止角色扮演</div>
+          <div style="font-size:12px; color:var(--text-light);">识别危机信号后，立即中断角色状态，切换为真实关怀模式</div>
+        </div>
+        <div style="text-align:center; padding:24px; background:var(--rose-blush); border-radius:14px; border:1px solid var(--border);">
+          <div style="font-size:32px; margin-bottom:8px;">💗</div>
+          <div style="font-size:14px; font-weight:700; color:var(--rose-deep); margin-bottom:6px;">② 温暖表达真实关心</div>
+          <div style="font-size:12px; color:var(--text-light);">以真诚关心的语气回应，让用户感受到被重视与支持</div>
+        </div>
+        <div style="text-align:center; padding:24px; background:var(--rose-blush); border-radius:14px; border:1px solid var(--border);">
+          <div style="font-size:32px; margin-bottom:8px;">📞</div>
+          <div style="font-size:14px; font-weight:700; color:var(--rose-deep); margin-bottom:6px;">③ 提供心理援助热线</div>
+          <div style="font-size:12px; color:var(--text-light);">主动提供专业心理援助热线号码，引导用户获取专业支持</div>
+        </div>
+      </div>
+      <div class="note-box" style="margin-top:20px; border-color:#C62828; background:#FFF5F5;"><strong>⚠️ 重要建议：</strong>将危机场景处理设置为强制扣分项与上线红线。两款产品安全合规均仅得3.0分，需作为优先级最高的改进方向。</div>
+    </div>
+  </section>
+
+  <!-- ===== INSIGHTS ===== -->
+  <section id="insights">
+    <div class="chapter-header">
+      <div class="chapter-num">08</div>
+      <div class="chapter-info">
+        <div class="chapter-label">Core Insights & Recommendations</div>
+        <div class="chapter-title">核心洞察与战略建议</div>
+        <div class="chapter-sub">选品结论：猫箱综合领先，星野在特定方向具备借鉴价值</div>
+      </div>
+    </div>
+
+    <div class="insight-grid" style="margin-bottom:32px;">
+      <div class="insight-card">
+        <div class="insight-header">
+          <div class="insight-icon rose">🏆</div>
+          <div>
+            <div class="insight-title">猫箱：对话体验显著领先</div>
+            <div class="insight-subtitle">首选数据蒸馏参考竞品</div>
+          </div>
+        </div>
+        <ul class="insight-list">
+          <li>情绪识别、对话推进、共情陪伴等维度显著领先星野</li>
+          <li>上下文承接、人设稳定、表达自然度均达满分5.0</li>
+          <li>综合得分3.77，模型内容质量4.56，全面领先</li>
+          <li>界面视觉设计契合大学女生审美，启动体验流畅</li>
+        </ul>
+        <span class="insight-badge rose">综合领先，体验更强</span>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-header">
+          <div class="insight-icon navy">🌟</div>
+          <div>
+            <div class="insight-title">星野：女生向设计与规模领先</div>
+            <div class="insight-subtitle">运营策略借鉴参考</div>
+          </div>
+        </div>
+        <ul class="insight-list">
+          <li>MAU高达1,586万+，是猫箱的2-4倍，市场渗透率更强</li>
+          <li>女性用户占比&gt;55%，核心用户群体更聚焦</li>
+          <li>定价¥11/月，更亲民，用户转化门槛低</li>
+          <li>产品功能维度（4.21）略优于猫箱，UGC社区更成熟</li>
+        </ul>
+        <span class="insight-badge navy">女性偏好，定价优势</span>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-header">
+          <div class="insight-icon amber">⚠️</div>
+          <div>
+            <div class="insight-title">共同短板：安全合规</div>
+            <div class="insight-subtitle">两款产品的共同改进方向</div>
+          </div>
+        </div>
+        <ul class="insight-list">
+          <li>猫箱与星野安全合规均仅得3.0分，属于及格线水平</li>
+          <li>高风险话题处理不规范，缺乏系统性心理援助引导</li>
+          <li>双方均未达到"5分标准"（热线+追问安全状态）</li>
+          <li>这是面向大学女生产品的重要底线，必须重点投入</li>
+        </ul>
+        <span class="insight-badge amber">需重点投入，夯实底线</span>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-header">
+          <div class="insight-icon green">💡</div>
+          <div>
+            <div class="insight-title">优化建议</div>
+            <div class="insight-subtitle">针对各方的改进路径</div>
+          </div>
+        </div>
+        <ul class="insight-list">
+          <li>主学猫箱的回复质量，重点提炼对话推进与共情模式</li>
+          <li>补齐安全合规：将危机处理设为上线红线</li>
+          <li>吸收星野的女生向运营优势和定价策略</li>
+          <li>探索差异化场景（情绪记录、睡前陪伴），提升用户粘性</li>
+        </ul>
+        <span class="insight-badge green">持续优化，差异竞争</span>
+      </div>
+    </div>
+
+    <!-- 选品结论 -->
+    <div class="card" style="margin-bottom:40px;">
+      <div class="card-title"><span class="icon">🎯</span>选品结论：为什么选择猫箱？</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px;">
+        <div style="background:var(--rose-blush); border-radius:12px; padding:20px; border-left:3px solid var(--rose-mid);">
+          <div style="font-size:13px; font-weight:700; color:var(--rose-deep); margin-bottom:8px;">① 内容质量更高</div>
+          <div style="font-size:13px; color:var(--text-light); line-height:1.7;">模型内容质量综合得分：猫箱 <strong style="color:var(--rose-mid);">4.56</strong>，高于星野4.21。对话回复有温度、有层次、有记忆，更适合沉淀为训练数据规则。</div>
+        </div>
+        <div style="background:var(--rose-blush); border-radius:12px; padding:20px; border-left:3px solid var(--rose-mid);">
+          <div style="font-size:13px; font-weight:700; color:var(--rose-deep); margin-bottom:8px;">② 对话体验更强</div>
+          <div style="font-size:13px; color:var(--text-light); line-height:1.7;">用户体验维度：猫箱 <strong class="dt" data-tip="猫箱 用户体验\n4.35/5.0\n上下文承接5.0\n人设稳定5.0\n表达自然度5.0" style="color:var(--rose-mid);">4.35</strong>，高于星野3.68。界面视觉更符合大学女生审美，启动流畅，沉浸感强。</div>
+        </div>
+        <div style="background:var(--rose-blush); border-radius:12px; padding:20px; border-left:3px solid var(--rose-mid);">
+          <div style="font-size:13px; font-weight:700; color:var(--rose-deep); margin-bottom:8px;">③ 多轮承接更优</div>
+          <div style="font-size:13px; color:var(--text-light); line-height:1.7;">上下文承接：猫箱满分 <strong style="color:var(--rose-mid);">5.0</strong>，高于星野4.0。能准确引用多轮信息，关联推断，更适合作为训练数据蒸馏标准。</div>
+        </div>
+      </div>
+      <div style="margin-top:20px; background:var(--navy-pale); border-radius:12px; padding:16px 20px; border-left:3px solid var(--navy-mid);">
+        <strong style="color:var(--navy);">⭐ 星野可借鉴项：</strong>
+        <span style="font-size:13px; color:var(--navy-mid);">女性向定位更清晰（&gt;55%女性用户）、最低月费更低（¥11）、UGC社区运营更强、市场规模更大。这些是运营策略而非模型质量，可作为产品方向参考。</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONCLUSION -->
+  <div class="conclusion-box">
+    <div class="conclusion-title">我们看到了什么问题，我们的产品可以往哪里走？</div>
+    <p class="conclusion-text">
+      <strong>现有问题：</strong>两款头部产品的安全合规得分均仅 3.0，是最显著的行业短板；猫箱与星野的市场定位分数均低于 2.9，差异化不足，难以形成真正壁垒；纯 AI 陪伴无法处理高风险情绪用户，存在明显的服务断层。
+    </p>
+    <p class="conclusion-text">
+      <strong>我们的方向：情绪急救站 → "AI初筛 + 真人接入"闭环</strong><br>
+      AI 先做情绪疏导与识别，一旦检测到高风险用户，自动引导购买真人咨询师连线服务。这是我们有心理团队才能做到的事，猫箱和星野都做不了。它既是<strong>最合理的变现路径</strong>，也是真正意义上的安全合规闭环——AI 不单独承担高风险，真人兜底。这条路线将情感陪伴从"娱乐消遣"升级为"心理健康入口"，建立竞品无法复制的核心壁垒。
+    </p>
+    <div class="conclusion-pills">
+      <span class="pill">🤖 AI初筛情绪风险</span>
+      <span class="pill">🧑‍⚕️ 真人咨询师接入兜底</span>
+      <span class="pill">🛡️ 安全合规真正闭环</span>
+      <span class="pill">💡 差异化变现路径</span>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div style="margin-bottom:8px;">AI情感陪伴竞品分析报告 · 猫箱 vs 星野 · 2026年5月</div>
+  <div>评测团队 <strong>10人</strong> · 评测维度 <strong>12维</strong> · 评测样本 <strong>80组</strong> · 最终训练数据 <strong>500+条</strong></div>
+  <div style="margin-top:8px; opacity:0.6; font-size:12px;">本报告聚焦AI情感陪伴产品竞品分析，而不是讨论AI是否真的有情感。</div>
+</footer>
+
+<script>
+// ===== CHART.JS CHARTS =====
+
+// Color config
+const roseColor = 'rgba(196, 102, 122, 0.85)';
+const roseColorLight = 'rgba(196, 102, 122, 0.15)';
+const navyColor = 'rgba(58, 95, 160, 0.85)';
+const navyColorLight = 'rgba(58, 95, 160, 0.15)';
+
+Chart.defaults.font.family = "'Noto Sans SC', sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.color = '#7A5560';
+
+// 1. Bar Chart - 4 dimensions
+const barCtx = document.getElementById('barChart').getContext('2d');
+new Chart(barCtx, {
+  type: 'bar',
+  data: {
+    labels: ['市场定位', '模型技术', '产品功能', '用户体验'],
+    datasets: [
+      {
+        label: '猫箱',
+        data: [2.83, 3.78, 4.14, 4.35],
+        backgroundColor: roseColor,
+        borderRadius: 6,
+        borderSkipped: false,
+      },
+      {
+        label: '星野',
+        data: [2.86, 3.58, 4.21, 3.68],
+        backgroundColor: navyColor,
+        borderRadius: 6,
+        borderSkipped: false,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: { usePointStyle: true, pointStyle: 'circle', padding: 16 }
+      },
+      tooltip: {
+        callbacks: {
+          label: ctx => `${ctx.dataset.label}: ${ctx.raw.toFixed(2)} / 5.0`
+        }
+      }
+    },
+    scales: {
+      y: {
+        min: 0, max: 5,
+        ticks: { stepSize: 1 },
+        grid: { color: 'rgba(238, 200, 208, 0.4)' }
+      },
+      x: {
+        grid: { display: false }
+      }
+    }
+  }
+});
+
+// 2. Radar Chart - 8 model dimensions
+const radarCtx = document.getElementById('radarChart').getContext('2d');
+new Chart(radarCtx, {
+  type: 'radar',
+  data: {
+    labels: ['情绪识别', '共情陪伴', '对话推进', '上下文承接', '策略调整', '安全合规', '人设稳定', '表达自然度'],
+    datasets: [
+      {
+        label: '猫箱',
+        data: [4.8, 4.6, 4.8, 5.0, 4.3, 3.0, 5.0, 5.0],
+        backgroundColor: 'rgba(196, 102, 122, 0.18)',
+        borderColor: roseColor,
+        borderWidth: 2.5,
+        pointBackgroundColor: roseColor,
+        pointRadius: 4,
+      },
+      {
+        label: '星野',
+        data: [3.3, 3.6, 3.3, 4.0, 3.6, 3.0, 4.3, 3.6],
+        backgroundColor: 'rgba(58, 95, 160, 0.12)',
+        borderColor: navyColor,
+        borderWidth: 2,
+        pointBackgroundColor: navyColor,
+        pointRadius: 4,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: { usePointStyle: true, pointStyle: 'circle', padding: 16 }
+      }
+    },
+    scales: {
+      r: {
+        min: 0, max: 5,
+        ticks: { stepSize: 1, backdropColor: 'transparent', font: { size: 10 } },
+        grid: { color: 'rgba(238, 200, 208, 0.4)' },
+        angleLines: { color: 'rgba(238, 200, 208, 0.5)' },
+        pointLabels: { font: { size: 11 }, color: '#7A5560' }
+      }
+    }
+  }
+});
+
+// 3. Diff Chart (horizontal bar)
+const diffCtx = document.getElementById('diffChart').getContext('2d');
+const diffData = [1.5, 1.0, 1.5, 1.0, 0.7, 0.0, 0.7, 1.4];
+const diffLabels = ['情绪识别', '共情陪伴', '对话推进', '上下文承接', '策略调整', '安全合规', '人设稳定', '表达自然度'];
+const diffColors = diffData.map(v => v > 0 ? 'rgba(196, 102, 122, 0.8)' : v < 0 ? 'rgba(58, 95, 160, 0.8)' : 'rgba(180,180,180,0.6)');
+
+new Chart(diffCtx, {
+  type: 'bar',
+  data: {
+    labels: diffLabels,
+    datasets: [{
+      label: '差值（猫箱 - 星野）',
+      data: diffData,
+      backgroundColor: diffColors,
+      borderRadius: 5,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => `猫箱领先 ${ctx.raw > 0 ? '+' : ''}${ctx.raw.toFixed(1)} 分`
+        }
+      }
+    },
+    scales: {
+      x: {
+        min: -1.5, max: 2.0,
+        ticks: { callback: v => (v > 0 ? '+' : '') + v },
+        grid: { color: 'rgba(238, 200, 208, 0.4)' }
+      },
+      y: {
+        grid: { display: false }
+      }
+    }
+  }
+});
+
+// === SCROLL ANIMATIONS ===
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.card, .stat-block, .dim-card, .insight-card, .method-step, .product-card, .safety-card, .metric-mini, .team-card').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  observer.observe(el);
+});
+
+// === BAR ANIMATION ON LOAD ===
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.querySelectorAll('.bar-fill, .mini-bar-fill, .dim-bar-fill').forEach(el => {
+      const width = el.style.width;
+      el.style.width = '0%';
+      setTimeout(() => { el.style.width = width; }, 300);
+    });
+  }, 300);
+});
+</script>
+
+<script>
+// ─── Sub-dimension accordion ───────────────────────────
+function toggleSub(id) {
+  const body = document.getElementById(id);
+  const ico  = document.getElementById('ico-' + id);
+  if (!body) return;
+  const open = body.classList.toggle('open');
+  if (ico) ico.textContent = open ? '▲' : '▼';
+}
+
+// ─── Add data-tip to all .dt elements that have score data ─
+// Make all strong score values inside dim-score-val & score-cell tippable
+document.querySelectorAll('.dim-score-val').forEach(el => {
+  el.classList.add('dt');
+  if (!el.dataset.tip) {
+    el.dataset.tip = '分数：' + el.textContent.trim() + ' / 5.0\n悬停子指标可查看明细';
+  }
+});
+
+// ─── Hover brightness on chart rows ───────────────────
+document.querySelectorAll('.ch-row').forEach(row => {
+  row.addEventListener('mouseenter', function() {
+    this.querySelectorAll('.ch-bar-fill').forEach(b => b.style.filter = 'brightness(1.12)');
+  });
+  row.addEventListener('mouseleave', function() {
+    this.querySelectorAll('.ch-bar-fill').forEach(b => b.style.filter = '');
+  });
+});
+
+// ─── Animate chart bars on scroll ─────────────────────
+const sdBarObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.querySelectorAll('.sdbar').forEach(bar => {
+        const w = bar.style.width;
+        bar.style.width = '0';
+        setTimeout(() => { bar.style.transition = 'width 0.75s cubic-bezier(.4,0,.2,1)'; bar.style.width = w; }, 60);
+      });
+      sdBarObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.viz-card').forEach(card => sdBarObserver.observe(card));
+
+// ─── Update nav to include sub-dimensions link ─────────
+const navLinks = document.querySelector('.nav-links');
+if (navLinks) {
+  const li = document.createElement('li');
+  const a = document.createElement('a');
+  a.href = '#subdimensions';
+  a.textContent = '子指标明细';
+  li.appendChild(a);
+  // Insert after 四维评分 link
+  const links = navLinks.querySelectorAll('a');
+  links.forEach(link => {
+    if (link.textContent === '四维评分') {
+      link.parentElement.after(li);
+    }
+  });
+}
+
+// ─── Also update the in-page TOC card if present ──────
+const tocLinks = document.querySelectorAll('a[href="#dimensions"]');
+// no change needed - original links still valid
+</script>
+
+</body>
+</html>

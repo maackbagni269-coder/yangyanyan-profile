@@ -1,0 +1,32 @@
+:root,
+[data-theme="light"] {
+  --color-bg: var(--color-light-bg);
+  --color-fg: var(--color-light-fg);
+  --color-border: var(--color-light-fg);
+  --color-hover-fill: var(--color-light-fg);
+  --color-selection-bg: var(--color-light-fg);
+  --color-selection-text: var(--color-light-bg);
+  --color-focus: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] {
+  --color-bg: var(--color-dark-bg);
+  --color-fg: var(--color-dark-fg);
+  --color-border: var(--color-dark-fg);
+  --color-hover-fill: var(--color-dark-fg);
+  --color-selection-bg: var(--color-dark-fg);
+  --color-selection-text: var(--color-dark-bg);
+  --color-focus: rgba(248, 246, 240, 0.5);
+  --color-panel-bg: rgba(0, 0, 0, 0.94);
+}
+
+body {
+  transition:
+    color var(--duration-fast) var(--easing-hover-fill),
+    background-color var(--duration-fast) var(--easing-hover-fill);
+}
+
+:focus-visible {
+  outline: var(--border-medium) solid var(--color-focus);
+  outline-offset: calc(var(--border-medium) * -1);
+}
