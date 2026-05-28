@@ -7,7 +7,6 @@
 
 .big-type-text {
   font-family: var(--font-en);
-  font-size: var(--font-size-big-type-mobile);
   font-weight: var(--font-weight-black);
   line-height: 0.9;
   letter-spacing: -0.02em;

@@ -11,7 +11,7 @@ const motifs = [
   { className: "sub-motif sub-motif--square", style: { "--x": "88%", "--y": "18%", "--sub-motif-color": "#9B6DFF" } },
   { className: "sub-motif sub-motif--ring", style: { "--x": "78%", "--y": "72%", "--sub-motif-color": "#4CAF72" } },
   { className: "sub-motif sub-motif--triangle", style: { "--x": "18%", "--y": "78%", "--sub-motif-color": "#FF6B4A" } },
-  { className: "sub-motif sub-motif--cross", style: { "--x": "62%", "--y": "36%", "--sub-motif-color": "#4A9EFF" } },
+  { className: "sub-motif sub-motif--cross", style: { "--x": "88%", "--y": "58%", "--sub-motif-color": "#4A9EFF" } },
   { className: "sub-motif sub-motif--tiny", style: { "--x": "38%", "--y": "86%", "--sub-motif-color": "#F5C842" } },
 ] satisfies { className: string; style: MotifStyle }[];
 
