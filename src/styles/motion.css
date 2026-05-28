@@ -76,9 +76,13 @@ body.has-custom-cursor * {
   .character-float,
   .character-tilt,
   .character-mask-stack,
-  .interaction-hint,
-  .custom-cursor {
+  .interaction-hint {
     animation: none !important;
+    transition: none !important;
+  }
+
+  /* Cursor ring: snap size changes instantly, ring still tracks mouse via RAF */
+  .cursor-ring {
     transition: none !important;
   }
 

@@ -1,165 +1,105 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import type { CSSProperties } from "react";
+import { useEffect, useRef } from "react";
 
-function supportsDesktopCursor() {
+// Lerp factor for ring — lower = more lag, higher = snappier
+const LERP = 0.13;
+
+function isDesktop() {
   return (
     window.matchMedia("(pointer: fine)").matches &&
-    window.matchMedia("(hover: hover)").matches &&
-    !window.matchMedia("(pointer: coarse)").matches
+    window.matchMedia("(hover: hover)").matches
   );
 }
 
 export function CustomCursor() {
-  const [enabled, setEnabled] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const [hovered, setHovered] = useState(false);
-  const [pressed, setPressed] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
-  const [position, setPosition] = useState({ x: -100, y: -100 });
+  const dotRef  = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<HTMLDivElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const finePointer = window.matchMedia("(pointer: fine)");
-    const coarsePointer = window.matchMedia("(pointer: coarse)");
-    const hoverCapability = window.matchMedia("(hover: hover)");
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const dot  = dotRef.current;
+    const ring = ringRef.current;
+    const wrap = wrapRef.current;
+    if (!dot || !ring || !wrap || !isDesktop()) return;
 
-    const syncCapability = () => {
-      const active = supportsDesktopCursor();
-      setEnabled(active);
-      setReducedMotion(reduceMotion.matches);
+    document.body.classList.add("has-custom-cursor");
 
-      document.body.classList.toggle("has-custom-cursor", active);
-      document.body.classList.toggle("has-reduced-motion", reduceMotion.matches);
+    // Current mouse position (dot — instant)
+    let mx = -200, my = -200;
+    // Lerped ring position (ring — lagged)
+    let rx = -200, ry = -200;
+    let raf = 0;
+    let reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-      if (!active) {
-        setVisible(false);
-        setHovered(false);
-        setPressed(false);
+    // ── RAF loop ────────────────────────────────────────────────────────────
+    const tick = () => {
+      const k = reduced ? 1 : LERP;
+      rx += (mx - rx) * k;
+      ry += (my - ry) * k;
+      // Direct DOM manipulation — no React re-renders
+      dot.style.transform  = `translate3d(${mx}px, ${my}px, 0) translate(-50%, -50%)`;
+      ring.style.transform = `translate3d(${rx.toFixed(2)}px, ${ry.toFixed(2)}px, 0) translate(-50%, -50%)`;
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+
+    // ── Event handlers ──────────────────────────────────────────────────────
+    const onMove = (e: PointerEvent) => {
+      mx = e.clientX;
+      my = e.clientY;
+      if (!wrap.classList.contains("is-visible")) {
+        rx = mx; ry = my;           // snap ring to cursor on first appear
+        wrap.classList.add("is-visible");
       }
     };
 
-    syncCapability();
-
-    const handlePointerMove = (event: PointerEvent) => {
-      if (!supportsDesktopCursor()) {
-        return;
-      }
-
-      setPosition({ x: event.clientX, y: event.clientY });
-      setVisible(true);
+    const onOver = (e: PointerEvent) => {
+      if (!(e.target instanceof Element)) return;
+      ring.classList.toggle(
+        "is-hovered",
+        Boolean(e.target.closest("a, button, [data-cursor='hover']"))
+      );
     };
 
-    const handlePointerOver = (event: PointerEvent) => {
-      const target = event.target;
-
-      if (!(target instanceof Element)) {
-        return;
-      }
-
-      setHovered(Boolean(target.closest("a, button, [data-cursor='hover']")));
-    };
-
-    const handlePointerOut = (event: PointerEvent) => {
-      const target = event.target;
-
-      if (!(target instanceof Element)) {
-        return;
-      }
-
-      if (!target.closest("a, button, [data-cursor='hover']")) {
-        return;
-      }
-
-      const relatedTarget = event.relatedTarget;
-      if (relatedTarget instanceof Element && relatedTarget.closest("a, button, [data-cursor='hover']")) {
-        return;
-      }
-
-      setHovered(false);
-    };
-
-    const handleWindowMouseOut = (event: MouseEvent) => {
-      if (!event.relatedTarget) {
-        setVisible(false);
-        setPressed(false);
+    const onOut = (e: PointerEvent) => {
+      if (!e.relatedTarget) {
+        wrap.classList.remove("is-visible");
+        ring.classList.remove("is-hovered", "is-pressed");
       }
     };
 
-    const handlePointerDown = () => {
-      if (supportsDesktopCursor()) {
-        setPressed(true);
-      }
-    };
+    const onDown = () => ring.classList.add("is-pressed");
+    const onUp   = () => ring.classList.remove("is-pressed");
 
-    const handlePointerUp = () => {
-      setPressed(false);
-    };
+    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onMql = () => { reduced = mql.matches; };
+    mql.addEventListener("change", onMql);
 
-    const handleWindowFocus = () => {
-      if (supportsDesktopCursor()) {
-        setVisible(true);
-      }
-    };
-
-    const handleWindowBlur = () => {
-      setVisible(false);
-      setPressed(false);
-    };
-
-    window.addEventListener("pointermove", handlePointerMove, { passive: true });
-    window.addEventListener("pointerdown", handlePointerDown, { passive: true });
-    window.addEventListener("pointerup", handlePointerUp, { passive: true });
-    window.addEventListener("pointercancel", handlePointerUp);
-    window.addEventListener("mouseout", handleWindowMouseOut);
-    window.addEventListener("focus", handleWindowFocus);
-    window.addEventListener("blur", handleWindowBlur);
-    document.addEventListener("pointerover", handlePointerOver, { passive: true });
-    document.addEventListener("pointerout", handlePointerOut);
-    finePointer.addEventListener("change", syncCapability);
-    coarsePointer.addEventListener("change", syncCapability);
-    hoverCapability.addEventListener("change", syncCapability);
-    reduceMotion.addEventListener("change", syncCapability);
+    window.addEventListener("pointermove", onMove,  { passive: true });
+    window.addEventListener("pointerdown", onDown,  { passive: true });
+    window.addEventListener("pointerup",   onUp,    { passive: true });
+    window.addEventListener("pointerout",  onOut);
+    document.addEventListener("pointerover", onOver, { passive: true });
 
     return () => {
-      document.body.classList.remove("has-custom-cursor", "has-reduced-motion");
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("pointerdown", handlePointerDown);
-      window.removeEventListener("pointerup", handlePointerUp);
-      window.removeEventListener("pointercancel", handlePointerUp);
-      window.removeEventListener("mouseout", handleWindowMouseOut);
-      window.removeEventListener("focus", handleWindowFocus);
-      window.removeEventListener("blur", handleWindowBlur);
-      document.removeEventListener("pointerover", handlePointerOver);
-      document.removeEventListener("pointerout", handlePointerOut);
-      finePointer.removeEventListener("change", syncCapability);
-      coarsePointer.removeEventListener("change", syncCapability);
-      hoverCapability.removeEventListener("change", syncCapability);
-      reduceMotion.removeEventListener("change", syncCapability);
+      cancelAnimationFrame(raf);
+      document.body.classList.remove("has-custom-cursor");
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerdown", onDown);
+      window.removeEventListener("pointerup",   onUp);
+      window.removeEventListener("pointerout",  onOut);
+      document.removeEventListener("pointerover", onOver);
+      mql.removeEventListener("change", onMql);
     };
   }, []);
 
-  if (!enabled) {
-    return null;
-  }
-
   return (
-    <div
-      className={[
-        "custom-cursor",
-        visible ? "is-visible" : "",
-        hovered ? "is-hovered" : "",
-        pressed ? "is-pressed" : "",
-        reducedMotion ? "is-reduced-motion" : "",
-      ].filter(Boolean).join(" ")}
-      style={
-        {
-          "--cursor-x": `${position.x}px`,
-          "--cursor-y": `${position.y}px`,
-        } as CSSProperties
-      }
-      aria-hidden="true"
-    />
+    <div ref={wrapRef} className="cursor-wrap" aria-hidden="true">
+      {/* Precise dot — sits exactly at pointer tip */}
+      <div ref={dotRef}  className="cursor-dot"  />
+      {/* Lagged ring — trails behind with spring feel */}
+      <div ref={ringRef} className="cursor-ring" />
+    </div>
   );
 }

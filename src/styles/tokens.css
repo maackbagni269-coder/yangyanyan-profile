@@ -1,8 +1,8 @@
 :root {
-  --color-light-bg: #f8f6f0;
+  --color-light-bg: #f5f0e8;
   --color-light-fg: #000000;
   --color-dark-bg: #000000;
-  --color-dark-fg: #f8f6f0;
+  --color-dark-fg: #f5f0e8;
   --color-accent-primary: #f73939;
   --color-accent-blue: #2189d6;
   --color-accent-yellow: #ffc82e;
@@ -27,16 +27,16 @@
   --letter-spacing-base: 0;
   --text-transform-nav: uppercase;
 
-  --font-size-marquee-mobile: 0.625rem;
+  --font-size-marquee-mobile: 0.75rem;
   --font-size-marquee-desktop: 0.875rem;
-  --font-size-nav: clamp(0.75rem, 0.85vw, 0.875rem);
-  --font-size-job-intent: clamp(0.8125rem, 0.9vw, 0.875rem);
-  --font-size-hero-quote-mobile: 0.8125rem;
-  --font-size-hero-quote-desktop: 0.875rem;
-  --font-size-hero-sub-quote: 0.875rem;
-  --font-size-big-type-mobile: clamp(4.5rem, 24vw, 9.375rem);
-  --font-size-big-type-desktop: clamp(11.25rem, 22vw, 22.5rem);
-  --font-size-big-type-wide: clamp(15rem, 24vw, 26.25rem);
+  --font-size-nav: clamp(0.8125rem, 0.9vw, 0.9375rem);
+  --font-size-job-intent: clamp(0.875rem, 0.95vw, 0.9375rem);
+  --font-size-hero-quote-mobile: 0.9375rem;
+  --font-size-hero-quote-desktop: 1rem;
+  --font-size-hero-sub-quote: 1rem;
+  --font-size-big-type-mobile: clamp(3.5rem, 18vw, 7rem);
+  --font-size-big-type-desktop: clamp(8rem, 16vw, 16rem);
+  --font-size-big-type-wide: clamp(10rem, 18vw, 19rem);
 
   --border-frame-mobile: 0.9375rem;
   --border-frame-desktop: 1.875rem;

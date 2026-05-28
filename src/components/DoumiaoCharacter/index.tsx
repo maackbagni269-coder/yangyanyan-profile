@@ -1,12 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useRef } from "react";
 
 // ── constants ────────────────────────────────────────────────────────────────
 const STATES = ["normal", "glow", "colorful", "mono", "pattern"] as const;
 type DoumiaoState = (typeof STATES)[number];
 const CYCLE_MS = 3200;
-const LERP = 0.08;
 
 function setHtmlState(state: DoumiaoState) {
   document.documentElement.dataset.doumiaoState = state;
@@ -15,18 +15,11 @@ function setHtmlState(state: DoumiaoState) {
 // ── component ─────────────────────────────────────────────────────────────────
 export function DoumiaoCharacter() {
   // DOM refs
-  const stageRef  = useRef<HTMLElement | null>(null);
-  const tiltRef   = useRef<HTMLDivElement | null>(null);
   const skinRef   = useRef<HTMLDivElement | null>(null);
 
   // mutable state (no re-renders needed)
   const idxRef        = useRef(0);
   const timerRef      = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const rafRef        = useRef<number>(0);
-  const targetX       = useRef(0);
-  const targetY       = useRef(0);
-  const curX          = useRef(0);
-  const curY          = useRef(0);
   const isPopping     = useRef(false); // click-pop in progress
   const reducedMotion = useRef(false);
 
@@ -73,12 +66,6 @@ export function DoumiaoCharacter() {
     }, CYCLE_MS);
   }, [advance]);
 
-  // ── click ────────────────────────────────────────────────────────────────────
-  const handleClick = useCallback(() => {
-    advance("click");
-    schedule(); // reset timer
-  }, [advance, schedule]);
-
   // ── main effect ──────────────────────────────────────────────────────────────
   useEffect(() => {
     setHtmlState(STATES[0]);
@@ -90,68 +77,17 @@ export function DoumiaoCharacter() {
     const onMql = () => { reducedMotion.current = mql.matches; };
     mql.addEventListener("change", onMql);
 
-    // 3-D tilt (desktop / fine pointer only)
-    const isMobile = window.matchMedia("(pointer: coarse)").matches;
-
-    const onPointerMove = (e: PointerEvent) => {
-      if (reducedMotion.current) return;
-      const stage = stageRef.current;
-      if (!stage) return;
-      const r  = stage.getBoundingClientRect();
-      const nx = (e.clientX - (r.left + r.width  / 2)) / (r.width  / 2);
-      const ny = (e.clientY - (r.top  + r.height / 2)) / (r.height / 2);
-      targetY.current = nx * 12;
-      targetX.current = -ny * 10;
-    };
-
-    const onPointerOut = (e: PointerEvent) => {
-      if (!e.relatedTarget) { targetX.current = 0; targetY.current = 0; }
-    };
-
-    if (!isMobile) {
-      window.addEventListener("pointermove", onPointerMove, { passive: true });
-      window.addEventListener("pointerout",  onPointerOut);
-    }
-
-    // RAF lerp
-    const tick = () => {
-      if (tiltRef.current) {
-        if (!reducedMotion.current) {
-          curX.current += (targetX.current - curX.current) * LERP;
-          curY.current += (targetY.current - curY.current) * LERP;
-          const rz = (curY.current * 0.125).toFixed(2);
-          tiltRef.current.style.transform =
-            `rotateX(${curX.current.toFixed(2)}deg) rotateY(${curY.current.toFixed(2)}deg) rotateZ(${rz}deg)`;
-        } else {
-          tiltRef.current.style.transform = "";
-          curX.current = 0; curY.current = 0;
-        }
-      }
-      rafRef.current = requestAnimationFrame(tick);
-    };
-    rafRef.current = requestAnimationFrame(tick);
-
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
-      cancelAnimationFrame(rafRef.current);
-      window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerout",  onPointerOut);
       mql.removeEventListener("change", onMql);
     };
   }, [schedule]);
 
-  const onStageLeave = useCallback(() => {
-    targetX.current = 0;
-    targetY.current = 0;
-  }, []);
-
   // ── render ────────────────────────────────────────────────────────────────────
   return (
     <section
-      ref={stageRef}
       className="character-stage"
       aria-label="豆苗角色"
-      onMouseLeave={onStageLeave}
     >
       {/*
         hit-area wraps the interactive zone.
@@ -161,19 +97,14 @@ export function DoumiaoCharacter() {
         mask-stack  → flat container: body-image + color-overlay + sheen,
                       all at the same Z — NO independent translateZ on any child.
       */}
-      <div
+      <Link
+        href="/ask-doumiao"
         className="character-hit-area"
-        role="button"
-        tabIndex={0}
         data-cursor="hover"
-        aria-label="点击豆苗切换状态"
-        onClick={handleClick}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleClick(); }
-        }}
+        aria-label="前往问豆苗页面"
       >
         <div className="character-float">
-          <div ref={tiltRef} className="character-tilt">
+          <div className="character-tilt">
             <div className="character-shadow" aria-hidden="true" />
             {/*
               character-mask-stack: ALL visual layers on the SAME Z plane.
@@ -200,7 +131,7 @@ export function DoumiaoCharacter() {
             </div>
           </div>
         </div>
-      </div>
+      </Link>
     </section>
   );
 }

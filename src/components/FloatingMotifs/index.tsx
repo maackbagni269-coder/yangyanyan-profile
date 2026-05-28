@@ -24,13 +24,13 @@ export function FloatingMotifs() {
       shape: shapes[i % shapes.length],
       x: 5 + ((i * 37 + 11) % 90),
       y: 10 + ((i * 53 + 7) % 80),
-      size: 6 + ((i * 17) % 12),
-      opacity: 0.22 + ((i * 0.009) % 0.18),
-      duration: 4 + ((i * 1.3) % 5),
+      size: 8 + ((i * 17) % 16),
+      opacity: 0.28 + ((i * 0.009) % 0.18),
+      duration: 6 + ((i * 1.8) % 8),
       delay: (i * 0.7) % 5,
       animClass: animations[i % animations.length],
       rotation: -18 + ((i * 11) % 36),
-      drift: 8 + ((i * 7) % 18),
+      drift: 18 + ((i * 11) % 32),
     }));
   }, []);
 
@@ -49,7 +49,7 @@ export function FloatingMotifs() {
               "--motif-duration": `${motif.duration}s`,
               "--motif-delay": `${motif.delay}s`,
               "--motif-rotation": `${motif.rotation}deg`,
-              "--motif-drift": `${motif.drift}px`,
+              "--motif-drift": `${motif.drift}vw`,
             } as MotifStyle
           }
         />
