@@ -24,3 +24,12 @@ npm-debug.log*
 # draft image files at project root
 jimeng-*.png
 artifacts/
+
+# Android / Capacitor build outputs (source files committed, binaries not)
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/captures/
+android/.idea/
+android/*.iml

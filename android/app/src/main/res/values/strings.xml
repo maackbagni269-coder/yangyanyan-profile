@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">杨艳艳</string>
+    <string name="title_activity_main">杨艳艳</string>
+    <string name="package_name">com.yangyanyan.profile</string>
+    <string name="custom_url_scheme">com.yangyanyan.profile</string>
+</resources>
