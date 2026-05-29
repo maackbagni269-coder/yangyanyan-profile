@@ -11,7 +11,8 @@ type ChatMessage = {
   content: string;
 };
 
-type DifyBlockingResponse = {
+type DifyStreamChunk = {
+  event?: string;
   answer?: string;
   conversation_id?: string;
   message?: string;
@@ -57,26 +58,92 @@ export function AskDoumiaoChat() {
         body: JSON.stringify({
           inputs: {},
           query: trimmed,
-          response_mode: "blocking",
+          response_mode: "streaming",
           user: "yangyanyan-profile-site",
           conversation_id: conversationId ?? undefined,
         }),
       });
 
-      const data = (await response.json()) as DifyBlockingResponse;
-
-      if (!response.ok) {
-        throw new Error(data.message || "豆苗暂时没有接上信号。");
+      if (!response.ok || !response.body) {
+        const errData = await response.json().catch(() => ({})) as DifyStreamChunk;
+        throw new Error(errData.message || "豆苗暂时没有接上信号。");
       }
 
-      if (data.conversation_id) {
-        setConversationId(data.conversation_id);
+      // Read SSE stream
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      let accumulatedAnswer = "";
+      let finalConversationId: string | null = null;
+      let assistantMsgId: string | null = null;
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() ?? "";
+
+        for (const line of lines) {
+          if (!line.startsWith("data: ")) continue;
+          const jsonStr = line.slice(6).trim();
+          if (!jsonStr || jsonStr === "[DONE]") continue;
+
+          let chunk: DifyStreamChunk;
+          try {
+            chunk = JSON.parse(jsonStr) as DifyStreamChunk;
+          } catch {
+            continue;
+          }
+
+          // agent_message: text delta; message: non-agent chat delta
+          if (
+            (chunk.event === "agent_message" || chunk.event === "message") &&
+            chunk.answer
+          ) {
+            accumulatedAnswer += chunk.answer;
+
+            if (!assistantMsgId) {
+              // First token — replace loading dots with real message
+              assistantMsgId = `assistant-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+              setIsLoading(false);
+              setMessages((current) => [
+                ...current,
+                { id: assistantMsgId!, role: "assistant", content: accumulatedAnswer },
+              ]);
+            } else {
+              setMessages((current) =>
+                current.map((msg) =>
+                  msg.id === assistantMsgId
+                    ? { ...msg, content: accumulatedAnswer }
+                    : msg
+                )
+              );
+            }
+          }
+
+          if (chunk.event === "message_end" && chunk.conversation_id) {
+            finalConversationId = chunk.conversation_id;
+          }
+
+          if (chunk.event === "error") {
+            throw new Error(chunk.message || "豆苗暂时没有接上信号。");
+          }
+        }
       }
 
-      setMessages((current) => [
-        ...current,
-        createMessage("assistant", data.answer || "豆苗暂时没有生成回复。"),
-      ]);
+      if (finalConversationId) {
+        setConversationId(finalConversationId);
+      }
+
+      // Stream finished with no content
+      if (!assistantMsgId) {
+        setMessages((current) => [
+          ...current,
+          createMessage("assistant", "豆苗暂时没有生成回复。"),
+        ]);
+      }
     } catch (error) {
       const message =
         error instanceof Error
