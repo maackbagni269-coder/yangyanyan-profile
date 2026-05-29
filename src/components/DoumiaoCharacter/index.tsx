@@ -4,7 +4,16 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef } from "react";
 
 // ── constants ────────────────────────────────────────────────────────────────
-const STATES = ["normal", "glow", "colorful", "mono", "pattern"] as const;
+const STATES = [
+  "neon-night",
+  "digital-ghost",
+  "gold-circuit",
+  "blood-city",
+  "ice-reactor",
+  "toxic-venom",
+  "abyss-crystal",
+  "blade-runner",
+] as const;
 type DoumiaoState = (typeof STATES)[number];
 const CYCLE_MS = 3200;
 
