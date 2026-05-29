@@ -1043,12 +1043,12 @@ html[data-doumiao-state="pattern"]  .cursor-ring { border-color: rgba( 78, 138, 
 
 .hero-quote__line1 {
   display: block;
-  margin-left: 0.25em;
+  margin-left: 0;
 }
 
 .hero-quote__line2 {
   display: block;
-  margin-left: 1.4em;
+  margin-left: 1.8em;
 }
 
 .hero-quote__copyright {
