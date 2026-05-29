@@ -669,132 +669,200 @@
   animation: doumiao-click-pop 860ms cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-html[data-doumiao-state="normal"] .character-mask-stack {
-  --doumiao-overlay-color: rgba(188, 168, 132, 1);
-  --doumiao-glow-color: rgba(168, 148, 108, 1);
+html[data-doumiao-state="neon-night"] .character-mask-stack {
+  --doumiao-overlay-color: linear-gradient(155deg, rgba(0, 245, 255, 1) 0%, rgba(180, 0, 255, 1) 100%);
+  --doumiao-glow-color: rgba(0, 245, 255, 1);
   --doumiao-glow-opacity: 1;
-  --doumiao-image-filter: contrast(1.04) saturate(1.05) sepia(0.12);
+  --doumiao-image-filter: saturate(1.3) drop-shadow(0 0 28px rgba(0, 245, 255, 0.45));
 }
 
-html[data-doumiao-state="glow"] .character-mask-stack {
-  --doumiao-overlay-color: rgba(33, 137, 214, 1);
-  --doumiao-glow-color: rgba(33, 137, 214, 1);
+html[data-doumiao-state="digital-ghost"] .character-mask-stack {
+  --doumiao-overlay-color: linear-gradient(155deg, rgba(0, 255, 65, 1) 0%, rgba(0, 180, 40, 1) 100%);
+  --doumiao-glow-color: rgba(0, 255, 65, 1);
   --doumiao-glow-opacity: 1;
-  --doumiao-image-filter: saturate(1.2) drop-shadow(0 0 28px rgba(33, 137, 214, 0.28));
+  --doumiao-image-filter: grayscale(0.4) saturate(1.5) drop-shadow(0 0 28px rgba(0, 255, 65, 0.45));
 }
 
-html[data-doumiao-state="colorful"] .character-mask-stack {
-  --doumiao-overlay-color: linear-gradient(160deg, rgba(247, 57, 57, 1) 0%, rgba(255, 200, 46, 1) 52%, rgba(247, 57, 57, 1) 100%);
-  --doumiao-glow-color: rgba(247, 57, 57, 1);
+html[data-doumiao-state="gold-circuit"] .character-mask-stack {
+  --doumiao-overlay-color: linear-gradient(155deg, rgba(255, 215, 0, 1) 0%, rgba(255, 140, 0, 1) 100%);
+  --doumiao-glow-color: rgba(255, 215, 0, 1);
   --doumiao-glow-opacity: 1;
-  --doumiao-image-filter: saturate(1.32) hue-rotate(-8deg);
+  --doumiao-image-filter: saturate(1.3) sepia(0.15) drop-shadow(0 0 28px rgba(255, 215, 0, 0.45));
 }
 
-html[data-doumiao-state="mono"] .character-mask-stack {
-  /* Black → vivid green split: upper body near-black, lower body electric green */
-  --doumiao-overlay-color: linear-gradient(155deg, rgba(8, 8, 8, 1) 0%, rgba(8, 8, 8, 1) 38%, rgba(12, 50, 24, 1) 62%, rgba(57, 211, 83, 1) 100%);
-  --doumiao-glow-color: rgba(57, 211, 83, 1);
+html[data-doumiao-state="blood-city"] .character-mask-stack {
+  --doumiao-overlay-color: linear-gradient(155deg, rgba(255, 17, 51, 1) 0%, rgba(255, 102, 0, 1) 100%);
+  --doumiao-glow-color: rgba(255, 17, 51, 1);
   --doumiao-glow-opacity: 1;
-  --doumiao-image-filter: grayscale(1) contrast(1.1);
+  --doumiao-image-filter: saturate(1.4) hue-rotate(-10deg) drop-shadow(0 0 28px rgba(255, 17, 51, 0.45));
 }
 
-html[data-doumiao-state="pattern"] .character-mask-stack {
-  --doumiao-overlay-color: linear-gradient(150deg, rgba(98, 138, 84, 1) 0%, rgba(162, 192, 122, 1) 100%);
-  --doumiao-glow-color: rgba(86, 136, 78, 1);
+html[data-doumiao-state="ice-reactor"] .character-mask-stack {
+  --doumiao-overlay-color: linear-gradient(155deg, rgba(0, 229, 255, 1) 0%, rgba(200, 235, 255, 1) 100%);
+  --doumiao-glow-color: rgba(0, 229, 255, 1);
   --doumiao-glow-opacity: 1;
-  --doumiao-image-filter: saturate(1.18) hue-rotate(-18deg);
+  --doumiao-image-filter: saturate(0.8) brightness(1.12) drop-shadow(0 0 28px rgba(0, 229, 255, 0.45));
 }
 
-/* PROFILE multi-colour gradient fills — synced with character state */
-html[data-doumiao-state="normal"] .big-type-text {
-  fill: url(#profile-grad-normal) rgba(188, 168, 132, 0.85);
+html[data-doumiao-state="toxic-venom"] .character-mask-stack {
+  --doumiao-overlay-color: linear-gradient(155deg, rgba(170, 255, 0, 1) 0%, rgba(0, 255, 204, 1) 100%);
+  --doumiao-glow-color: rgba(170, 255, 0, 1);
+  --doumiao-glow-opacity: 1;
+  --doumiao-image-filter: saturate(1.5) hue-rotate(15deg) drop-shadow(0 0 28px rgba(170, 255, 0, 0.45));
 }
 
-html[data-doumiao-state="glow"] .big-type-text {
-  fill: url(#profile-grad-glow) rgba(33, 137, 214, 0.82);
+html[data-doumiao-state="abyss-crystal"] .character-mask-stack {
+  --doumiao-overlay-color: linear-gradient(155deg, rgba(204, 0, 255, 1) 0%, rgba(255, 0, 204, 1) 100%);
+  --doumiao-glow-color: rgba(204, 0, 255, 1);
+  --doumiao-glow-opacity: 1;
+  --doumiao-image-filter: saturate(1.3) hue-rotate(30deg) drop-shadow(0 0 28px rgba(204, 0, 255, 0.45));
 }
 
-html[data-doumiao-state="colorful"] .big-type-text {
-  fill: url(#profile-grad-colorful) rgba(247, 57, 57, 0.82);
+html[data-doumiao-state="blade-runner"] .character-mask-stack {
+  --doumiao-overlay-color: linear-gradient(155deg, rgba(255, 170, 0, 1) 0%, rgba(0, 170, 255, 1) 100%);
+  --doumiao-glow-color: rgba(255, 170, 0, 1);
+  --doumiao-glow-opacity: 1;
+  --doumiao-image-filter: saturate(1.2) drop-shadow(0 0 28px rgba(255, 170, 0, 0.45));
 }
 
-html[data-doumiao-state="mono"] .big-type-text {
-  fill: url(#profile-grad-mono) rgba(8, 8, 8, 0.90);
+/* PROFILE gradient fills — synced with cyberpunk character state */
+html[data-doumiao-state="neon-night"] .big-type-text {
+  fill: url(#profile-grad-neon-night) rgba(0, 245, 255, 0.85);
+}
+html[data-doumiao-state="digital-ghost"] .big-type-text {
+  fill: url(#profile-grad-digital-ghost) rgba(0, 255, 65, 0.85);
+}
+html[data-doumiao-state="gold-circuit"] .big-type-text {
+  fill: url(#profile-grad-gold-circuit) rgba(255, 215, 0, 0.85);
+}
+html[data-doumiao-state="blood-city"] .big-type-text {
+  fill: url(#profile-grad-blood-city) rgba(255, 17, 51, 0.85);
+}
+html[data-doumiao-state="ice-reactor"] .big-type-text {
+  fill: url(#profile-grad-ice-reactor) rgba(0, 229, 255, 0.85);
+}
+html[data-doumiao-state="toxic-venom"] .big-type-text {
+  fill: url(#profile-grad-toxic-venom) rgba(170, 255, 0, 0.85);
+}
+html[data-doumiao-state="abyss-crystal"] .big-type-text {
+  fill: url(#profile-grad-abyss-crystal) rgba(204, 0, 255, 0.85);
+}
+html[data-doumiao-state="blade-runner"] .big-type-text {
+  fill: url(#profile-grad-blade-runner) rgba(255, 170, 0, 0.85);
 }
 
-html[data-doumiao-state="pattern"] .big-type-text {
-  fill: url(#profile-grad-pattern) rgba(86, 136, 78, 0.82);
+/* PROFILE pattern overlay — switches pattern fill per cyberpunk state */
+html[data-doumiao-state="neon-night"] .big-type-text--pattern {
+  fill: url(#profile-pat-neon-night);
+  opacity: 0.72;
 }
-
-/* PROFILE pattern overlay — switches pattern fill per state */
-html[data-doumiao-state="normal"] .big-type-text--pattern {
-  fill: url(#profile-pat-normal);
+html[data-doumiao-state="digital-ghost"] .big-type-text--pattern {
+  fill: url(#profile-pat-digital-ghost);
+  opacity: 0.72;
+}
+html[data-doumiao-state="gold-circuit"] .big-type-text--pattern {
+  fill: url(#profile-pat-gold-circuit);
+  opacity: 0.72;
+}
+html[data-doumiao-state="blood-city"] .big-type-text--pattern {
+  fill: url(#profile-pat-blood-city);
+  opacity: 0.72;
+}
+html[data-doumiao-state="ice-reactor"] .big-type-text--pattern {
+  fill: url(#profile-pat-ice-reactor);
+  opacity: 0.72;
+}
+html[data-doumiao-state="toxic-venom"] .big-type-text--pattern {
+  fill: url(#profile-pat-toxic-venom);
+  opacity: 0.72;
+}
+html[data-doumiao-state="abyss-crystal"] .big-type-text--pattern {
+  fill: url(#profile-pat-abyss-crystal);
+  opacity: 0.72;
+}
+html[data-doumiao-state="blade-runner"] .big-type-text--pattern {
+  fill: url(#profile-pat-blade-runner);
   opacity: 0.72;
 }
 
-html[data-doumiao-state="glow"] .big-type-text--pattern {
-  fill: url(#profile-pat-glow);
-  opacity: 0.72;
-}
-
-html[data-doumiao-state="colorful"] .big-type-text--pattern {
-  fill: url(#profile-pat-colorful);
-  opacity: 0.72;
-}
-
-html[data-doumiao-state="mono"] .big-type-text--pattern {
-  fill: url(#profile-pat-mono);
-  opacity: 0.72;
-}
-
-html[data-doumiao-state="pattern"] .big-type-text--pattern {
-  fill: url(#profile-pat-pattern);
-  opacity: 0.64;
-}
-
-html[data-doumiao-state="normal"] .motif {
-  color: rgba(168, 148, 108, 0.45);
-  --motif-state-opacity: 0.85;
-  --motif-hue: 0deg;
-  --motif-saturation: 0.6;
-}
-
-html[data-doumiao-state="glow"] .motif {
-  color: rgba(33, 137, 214, 0.38);
+html[data-doumiao-state="neon-night"] .motif {
+  color: rgba(0, 245, 255, 0.38);
   --motif-state-opacity: 1;
-  --motif-hue: -8deg;
-  --motif-saturation: 1.18;
+  --motif-hue: 180deg;
+  --motif-saturation: 1.3;
+}
+html[data-doumiao-state="neon-night"] .motif:nth-child(2n) {
+  color: rgba(180, 0, 255, 0.38);
 }
 
-html[data-doumiao-state="colorful"] .motif {
-  color: rgba(247, 57, 57, 0.4);
-  --motif-state-opacity: 1.02;
-  --motif-hue: 6deg;
-  --motif-saturation: 1.24;
-}
-
-html[data-doumiao-state="colorful"] .motif:nth-child(3n + 2) {
-  color: rgba(255, 200, 46, 0.4);
-}
-
-html[data-doumiao-state="mono"] .motif {
-  /* Odd motifs: vivid green */
-  color: rgba(57, 211, 83, 0.42);
+html[data-doumiao-state="digital-ghost"] .motif {
+  color: rgba(0, 255, 65, 0.42);
   --motif-state-opacity: 1;
-  --motif-hue: 0deg;
-  --motif-saturation: 1;
+  --motif-hue: 120deg;
+  --motif-saturation: 1.4;
+}
+html[data-doumiao-state="digital-ghost"] .motif:nth-child(2n) {
+  color: rgba(255, 107, 0, 0.38);
 }
 
-/* Even motifs: near-black — creates a black-green clash clash effect */
-html[data-doumiao-state="mono"] .motif:nth-child(2n) {
-  color: rgba(10, 10, 10, 0.58);
-}
-
-html[data-doumiao-state="pattern"] .motif {
-  color: rgba(86, 136, 78, 0.36);
+html[data-doumiao-state="gold-circuit"] .motif {
+  color: rgba(255, 215, 0, 0.42);
   --motif-state-opacity: 1;
-  --motif-hue: -18deg;
-  --motif-saturation: 1.05;
+  --motif-hue: 40deg;
+  --motif-saturation: 1.3;
+}
+html[data-doumiao-state="gold-circuit"] .motif:nth-child(2n) {
+  color: rgba(255, 140, 0, 0.38);
+}
+
+html[data-doumiao-state="blood-city"] .motif {
+  color: rgba(255, 17, 51, 0.42);
+  --motif-state-opacity: 1;
+  --motif-hue: -10deg;
+  --motif-saturation: 1.4;
+}
+html[data-doumiao-state="blood-city"] .motif:nth-child(2n) {
+  color: rgba(255, 102, 0, 0.38);
+}
+
+html[data-doumiao-state="ice-reactor"] .motif {
+  color: rgba(0, 229, 255, 0.38);
+  --motif-state-opacity: 1;
+  --motif-hue: 190deg;
+  --motif-saturation: 0.9;
+}
+html[data-doumiao-state="ice-reactor"] .motif:nth-child(2n) {
+  color: rgba(200, 235, 255, 0.35);
+}
+
+html[data-doumiao-state="toxic-venom"] .motif {
+  color: rgba(170, 255, 0, 0.42);
+  --motif-state-opacity: 1;
+  --motif-hue: 80deg;
+  --motif-saturation: 1.5;
+}
+html[data-doumiao-state="toxic-venom"] .motif:nth-child(2n) {
+  color: rgba(0, 255, 204, 0.38);
+}
+
+html[data-doumiao-state="abyss-crystal"] .motif {
+  color: rgba(204, 0, 255, 0.42);
+  --motif-state-opacity: 1;
+  --motif-hue: 280deg;
+  --motif-saturation: 1.3;
+}
+html[data-doumiao-state="abyss-crystal"] .motif:nth-child(2n) {
+  color: rgba(255, 0, 204, 0.38);
+}
+
+html[data-doumiao-state="blade-runner"] .motif {
+  color: rgba(255, 170, 0, 0.42);
+  --motif-state-opacity: 1;
+  --motif-hue: 30deg;
+  --motif-saturation: 1.2;
+}
+html[data-doumiao-state="blade-runner"] .motif:nth-child(2n) {
+  color: rgba(0, 170, 255, 0.38);
 }
 
 html[data-doumiao-motion="auto"] .motif,
@@ -846,16 +914,29 @@ html[data-doumiao-motion="click"] .interaction-hint {
     transform 300ms ease;
 }
 
-html[data-doumiao-state="glow"] .interaction-hint {
-  color: rgba(33, 137, 214, 0.7);
+html[data-doumiao-state="neon-night"] .interaction-hint {
+  color: rgba(0, 245, 255, 0.70);
 }
-
-html[data-doumiao-state="colorful"] .interaction-hint {
-  color: rgba(247, 57, 57, 0.68);
+html[data-doumiao-state="digital-ghost"] .interaction-hint {
+  color: rgba(0, 255, 65, 0.70);
 }
-
-html[data-doumiao-state="mono"] .interaction-hint {
-  color: rgba(0, 0, 0, 0.56);
+html[data-doumiao-state="gold-circuit"] .interaction-hint {
+  color: rgba(255, 215, 0, 0.70);
+}
+html[data-doumiao-state="blood-city"] .interaction-hint {
+  color: rgba(255, 17, 51, 0.70);
+}
+html[data-doumiao-state="ice-reactor"] .interaction-hint {
+  color: rgba(0, 229, 255, 0.70);
+}
+html[data-doumiao-state="toxic-venom"] .interaction-hint {
+  color: rgba(170, 255, 0, 0.70);
+}
+html[data-doumiao-state="abyss-crystal"] .interaction-hint {
+  color: rgba(204, 0, 255, 0.70);
+}
+html[data-doumiao-state="blade-runner"] .interaction-hint {
+  color: rgba(255, 170, 0, 0.70);
 }
 
 html[data-doumiao-state="pattern"] .interaction-hint {
@@ -2020,7 +2101,7 @@ html[data-doumiao-state="pattern"]  .cursor-ring { border-color: rgba( 78, 138, 
 
   .hero-quote__sub {
     grid-column: 1;
-    font-size: 37px;
+    font-size: 18px;
   }
 
   .hero-quote__copyright {
