@@ -583,6 +583,29 @@
   transition: background 300ms ease;
 }
 
+/* fixed-colour layer: face (white) + blush (red) — never tinted by state */
+.character-face-lock {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-mask-image: url('/assets/doumiao/doumiao-face-blush-mask.png');
+  mask-image: url('/assets/doumiao/doumiao-face-blush-mask.png');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-mode: luminance;
+  mask-mode: luminance;
+}
+
 /* top-left highlight sheen, also clipped to silhouette */
 .character-sheen {
   position: absolute;
