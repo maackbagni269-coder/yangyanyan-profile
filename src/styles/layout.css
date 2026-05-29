@@ -2144,3 +2144,134 @@ html[data-doumiao-state="pattern"]  .cursor-ring { border-color: rgba( 78, 138, 
     width: calc(50% - 103px);
   }
 }
+
+/* ── Download page ──────────────────────────────── */
+.download-page {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: var(--color-bg);
+}
+
+.download-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 26rem;
+  padding: 2.5rem 2rem;
+  border: var(--border-thin) solid var(--color-border);
+  background: var(--color-panel-bg);
+}
+
+.download-icon {
+  width: 6rem;
+  height: 6rem;
+  border: var(--border-thin) solid var(--color-border);
+  border-radius: 1.25rem;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg);
+}
+
+.download-icon img {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+}
+
+.download-title {
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-black);
+  font-size: 1.75rem;
+  letter-spacing: -0.02em;
+  text-align: center;
+  color: var(--color-fg);
+}
+
+.download-subtitle {
+  font-size: 0.875rem;
+  color: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  margin-top: -1rem;
+}
+
+.download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background: var(--color-fg);
+  color: var(--color-bg);
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-bold);
+  font-size: 1rem;
+  text-decoration: none;
+  border: var(--border-thin) solid var(--color-fg);
+  cursor: pointer;
+  transition: background 200ms ease, color 200ms ease;
+  width: 100%;
+  justify-content: center;
+}
+
+.download-btn:hover {
+  background: var(--color-accent-primary);
+  border-color: var(--color-accent-primary);
+  color: #fff;
+}
+
+.download-btn__icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.download-guide {
+  width: 100%;
+  border-top: var(--border-thin) solid rgba(0,0,0,0.12);
+  padding-top: 1.25rem;
+}
+
+.download-guide__title {
+  font-weight: var(--font-weight-bold);
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.75rem;
+  color: var(--color-fg);
+}
+
+.download-guide__steps {
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  color: rgba(0,0,0,0.7);
+  line-height: 1.5;
+}
+
+.download-guide__note {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  color: rgba(0,0,0,0.4);
+  text-align: center;
+}
+
+.download-back {
+  font-size: 0.8125rem;
+  color: rgba(0,0,0,0.4);
+  text-decoration: none;
+  border-bottom: var(--border-thin) solid rgba(0,0,0,0.2);
+  padding-bottom: 1px;
+  transition: color 160ms ease;
+}
+
+.download-back:hover {
+  color: var(--color-fg);
+  border-color: var(--color-fg);
+}
