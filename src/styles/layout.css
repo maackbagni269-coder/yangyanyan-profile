@@ -329,7 +329,7 @@
 /* calligraphy motto positioned bottom-left of PROFILE */
 .big-type-motto {
   font-family: var(--font-calligraphy, cursive);
-  font-size: 70px;
+  font-size: 22px;
   fill: rgba(0, 0, 0, 0.65);
   transition: fill 300ms ease;
 }
@@ -1037,6 +1037,18 @@ html[data-doumiao-state="pattern"]  .cursor-ring { border-color: rgba( 78, 138, 
 
 .hero-quote__sub {
   font-size: var(--font-size-hero-sub-quote);
+  font-family: "Noto Serif SC", "Source Han Serif SC", "SimSun", "宋体", Georgia, serif;
+  line-height: 1.5;
+}
+
+.hero-quote__line1 {
+  display: block;
+  margin-left: 0.25em;
+}
+
+.hero-quote__line2 {
+  display: block;
+  margin-left: 1.4em;
 }
 
 .hero-quote__copyright {
