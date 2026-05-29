@@ -6,6 +6,7 @@ const navItems = [
   { label: "成果展示", href: "/showcase/" },
   { label: "文章陈列室", href: "/articles/" },
   { label: "联系我", href: "/contact/" },
+  { label: "下载 App", href: "/download/" },
 ];
 
 export function NavGrid() {

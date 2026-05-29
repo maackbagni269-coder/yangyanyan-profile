@@ -2029,7 +2029,8 @@ html[data-doumiao-state="pattern"]  .cursor-ring { border-color: rgba( 78, 138, 
     min-width: 46%;
   }
 
-  .nav-grid__item:nth-child(3) {
+  .nav-grid__item:nth-child(3),
+  .nav-grid__item:nth-child(6) {
     border-right: none;
   }
 
