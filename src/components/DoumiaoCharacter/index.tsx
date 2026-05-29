@@ -128,7 +128,9 @@ export function DoumiaoCharacter() {
               <div className="character-color-overlay" aria-hidden="true" />
               {/* 3. top-left highlight sheen */}
               <div className="character-sheen" aria-hidden="true" />
-              {/* 4. fixed-colour face + blush — always white/red regardless of state */}
+              {/* 4. bottom-right depth shadow — unlit side of 3-D form */}
+              <div className="character-depth-shadow" aria-hidden="true" />
+              {/* 5. fixed-colour face + blush — always white/red regardless of state */}
               <img
                 className="character-face-lock"
                 src="/assets/doumiao/doumiao-body.png"
