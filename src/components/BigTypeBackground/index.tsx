@@ -122,7 +122,7 @@ export function BigTypeBackground() {
         {/* calligraphy motto — bottom-left of PROFILE letters, width ≤ "PR" */}
         <text
           className="big-type-motto"
-          x="265"
+          x="-4"
           y="228"
           textAnchor="start"
           dominantBaseline="auto"
