@@ -20,6 +20,7 @@
 
   --font-en: "Proxima Nova", Inter, Arial, sans-serif;
   --font-zh: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", var(--font-en);
+  --font-calligraphy: "Liu Jian Mao Cao", cursive;
   --font-weight-light: 300;
   --font-weight-regular: 400;
   --font-weight-bold: 700;

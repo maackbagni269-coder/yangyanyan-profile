@@ -326,6 +326,14 @@
   mix-blend-mode: multiply;
 }
 
+/* calligraphy motto positioned bottom-left of PROFILE */
+.big-type-motto {
+  font-family: var(--font-calligraphy, cursive);
+  font-size: 70px;
+  fill: rgba(0, 0, 0, 0.65);
+  transition: fill 300ms ease;
+}
+
 .floating-motifs {
   position: absolute;
   inset: 0;
@@ -2003,7 +2011,7 @@ html[data-doumiao-state="pattern"]  .cursor-ring { border-color: rgba( 78, 138, 
   }
 
   .hero-quote__copyright {
-    grid-row: 1 / span 2;
+    grid-row: 1;
     grid-column: 2;
     align-self: end;
     display: block;

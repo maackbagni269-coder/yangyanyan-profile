@@ -3,7 +3,7 @@ export function BigTypeBackground() {
     <div className="big-type-background" aria-hidden="true">
       <svg
         className="big-type-svg"
-        viewBox="0 0 1280 280"
+        viewBox="0 0 1280 320"
         preserveAspectRatio="xMidYMid meet"
         role="img"
       >
@@ -117,6 +117,17 @@ export function BigTypeBackground() {
           fill="url(#profile-pat-normal)"
         >
           PROFILE
+        </text>
+
+        {/* calligraphy motto — bottom-left of PROFILE letters */}
+        <text
+          className="big-type-motto"
+          x="300"
+          y="262"
+          textAnchor="start"
+          dominantBaseline="auto"
+        >
+          你可以成为任何样子
         </text>
       </svg>
     </div>
