@@ -37,7 +37,7 @@
   --font-size-hero-sub-quote: 1rem;
   --font-size-big-type-mobile: clamp(3.5rem, 18vw, 7rem);
   --font-size-big-type-desktop: clamp(8rem, 16vw, 16rem);
-  --font-size-big-type-wide: clamp(10rem, 21.9vw, 23rem);
+  --font-size-big-type-wide: clamp(10rem, 19.1vw, 23rem);
 
   --border-frame-mobile: 0.9375rem;
   --border-frame-desktop: 1.875rem;
